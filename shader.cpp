@@ -66,7 +66,7 @@ bool AddShader(GLuint program, GLenum ShaderType, const char * pFilename, GLuint
 	}
 
 	glAttachShader(program, ShaderObj);
-	std::cout << s << std::endl;
+	//std::cout << s << std::endl;
 	return true;
 }
 

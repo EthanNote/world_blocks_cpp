@@ -45,9 +45,14 @@ public:
 	//std::shared_ptr<CameraFPS> camera = std::shared_ptr<CameraFPS>(new CameraFPS);
 	std::shared_ptr<CameraFPS> camera = std::dynamic_pointer_cast<CameraFPS, Camera>(Camera::CreateFPSCamera());
 
-	BlockShader shader = nullptr;
-	BlockRenderer renderer = nullptr;
-	BlockPool pool = nullptr;
+	BlockShader block_shader = nullptr;
+	BlockRenderer block_renderer = nullptr;
+	BlockPool block_pool = nullptr;
+
+	ScreenShader screen_shader = nullptr;
+	ScreenRenderer screen_renderer = nullptr;
+
+
 	RenderTarget rendertarget = nullptr;
 
 	virtual bool GameLoop() {
@@ -58,7 +63,8 @@ public:
 		GLuint location = glGetUniformLocation(shader_programme, "mat_mvp");
 
 		// wipe the drawing surface clear
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shader_programme);
 
 
@@ -70,8 +76,26 @@ public:
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
-		shader->mvp.Set(mvp);
-		renderer->Draw();
+		block_shader->mvp.Set(mvp);
+
+
+
+		rendertarget->Bind();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		block_renderer->Draw();
+
+
+		CRenderTarget::UnbindAll();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_TEXTURE_2D);
+
+		/*glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, rendertarget->color_buffers[0]->GetName());*/
+		rendertarget->color_buffers[0]->Bind(TextureUnit::TEXTURE0);
+
+		screen_renderer->Draw();
+
+		auto err = glGetError();
 
 		// update other events like input handling 
 		glfwPollEvents();
@@ -91,37 +115,38 @@ public:
 		auto controller = camera->CreateController();
 		controllers.push_back(controller);
 
-		camera->position = glm::vec3(16, 16, 200);
+		camera->position = glm::vec3(1.2, 1.2, 1.2);
 
-		shader = CBlockShader::Create();
-		shader->Load("shader/block/block.vs", "shader/block/block.fs", "shader/block/block.gs");
-		shader->LocateUniform("MVP", shader->mvp);
+		block_shader = CBlockShader::Create();
+		block_shader->Load("shader/block/block.vs", "shader/block/block.fs", "shader/block/block.gs");
+		block_shader->LocateUniform("MVP", block_shader->mvp);
 
 
-		pool = CBlockPool::Create();
-		renderer = CBlockRenderer::Create(shader, pool);
+		block_pool = CBlockPool::Create();
+		block_renderer = CBlockRenderer::Create(block_shader, block_pool);
 
 		rendertarget = CRenderTarget::Create();
 		rendertarget->CreateDepthBuffer(800, 600);
 		rendertarget->CreateColorBuffers(800, 600, 4);
-		std::cout << std::hex << rendertarget->CheckStatus() << std::endl;
+		auto check = rendertarget->CheckStatus();
+		if (check != RTCheckResult::COMPLETE) {
+			std::cout << check << std::endl;
+		}
 
-		auto func = [&]() {
-			for (int i = 0; i < 1024; i++) {
-				for (int j = 0; j < 1024; j++) {
-					Block b{ i,0,j,1,0,0, {-1,-1,-1,-1,-1,-1,-1,-1} };
-					pool->LockWrite();
-					pool->blocks.push_back(b);
-					pool->UnlockWrite();
-					//std::this_thread::sleep_for(std::chrono::microseconds(0));
-				}
-			}
-		};
+		screen_shader = CScreenShader::Create();
+		screen_shader->Load("shader/screen/screen.vs", "shader/screen/screen.fs", "shader/screen/screen.gs");
+		screen_shader->LocateUniform("tex", screen_shader->tex);
+
+
+		screen_shader->tex.Set(0);
+		screen_renderer = CScreenRenderer::Create(screen_shader);
+
+
 
 		////func();
 
-		new std::thread(func);
-	
+
+
 	/*	for (int i = 0; i < 1024; i++) {
 			for (int j = 0; j < 1024; j++) {
 				Block b{ i,0,j,1,0,0, {-1,-1,-1,-1,-1,-1,-1,-1} };
@@ -297,6 +322,20 @@ public:
 				glGetProgramInfoLog(block_shader, sizeof(err), NULL, err);
 				fprintf(stderr, "Error linking shader program: '%s'\n", err);
 			}*/
+
+		auto func = [&]() {
+			for (int i = 0; i < 1024; i++) {
+				for (int j = 0; j < 1024; j++) {
+					Block b{ i,0,j,1,0,0, {-1,-1,-1,-1,-1,-1,-1,-1} };
+					block_pool->LockWrite();
+					block_pool->blocks.push_back(b);
+					block_pool->UnlockWrite();
+					//std::this_thread::sleep_for(std::chrono::microseconds(0));
+				}
+			}
+		};
+
+		new std::thread(func);
 
 		auto error = glGetError();
 		return error;

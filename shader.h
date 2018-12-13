@@ -42,7 +42,6 @@ public:
 class CScreenShader : public CShader {
 public:
 
-	UniformIntArray samplers;
-	UniformInt index;
+	UniformInt tex;
 	static ScreenShader Create();
 };

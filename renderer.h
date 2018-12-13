@@ -41,7 +41,12 @@ public:
 
 class CScreenRenderer : CRenderer {
 public:
+	ScreenShader shader;
 	CScreenRenderer();
+
 	virtual void Draw() override;
+
+	static ScreenRenderer Create(ScreenShader shader);
+
 };
 

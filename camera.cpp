@@ -116,6 +116,6 @@ PerspectiveInfo::PerspectiveInfo()
 {
 	this->fov = 60;
 	this->aspect = 1.33;
-	this->zFar = 1000;
-	this->zNear = 50;
+	this->zFar = 10;
+	this->zNear = 0.1;
 }

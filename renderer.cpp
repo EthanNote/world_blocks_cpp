@@ -59,4 +59,16 @@ CScreenRenderer::CScreenRenderer()
 
 void CScreenRenderer::Draw()
 {
+	this->shader->UseProgram();
+	glBegin(GL_POINTS);
+	glVertex2i(0, 0);
+	glEnd();
+	glUseProgram(0);
+}
+
+ScreenRenderer CScreenRenderer::Create(ScreenShader shader)
+{
+	auto renderer = ScreenRenderer(new CScreenRenderer);
+	renderer->shader = shader;
+	return renderer;
 }

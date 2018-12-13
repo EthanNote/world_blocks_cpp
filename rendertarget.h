@@ -33,5 +33,5 @@ public:
 	~CRenderTarget();
 	
 	static RenderTarget Create();
-	static void Unbind();
+	static void UnbindAll();
 };

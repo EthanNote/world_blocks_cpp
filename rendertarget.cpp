@@ -2,6 +2,21 @@
 #include "rendertarget.h"
 
 
+GLenum DrawBuffers[] = {
+	GL_COLOR_ATTACHMENT0,
+	GL_COLOR_ATTACHMENT1,
+	GL_COLOR_ATTACHMENT2,
+	GL_COLOR_ATTACHMENT3,
+	GL_COLOR_ATTACHMENT4,
+	GL_COLOR_ATTACHMENT5,
+	GL_COLOR_ATTACHMENT6,
+	GL_COLOR_ATTACHMENT7,
+	GL_COLOR_ATTACHMENT8,
+	GL_COLOR_ATTACHMENT9,
+	GL_COLOR_ATTACHMENT10
+};
+
+
 void CRenderTarget::CreateColorBuffers(int width, int height, int count)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
@@ -13,7 +28,7 @@ void CRenderTarget::CreateColorBuffers(int width, int height, int count)
 		this->color_buffers.push_back(T);
 		attachments.push_back(attachment);
 	}
-	glDrawBuffers(count, &attachments[0]);
+	glDrawBuffers(count, DrawBuffers);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -61,7 +76,7 @@ RenderTarget CRenderTarget::Create()
 	return RenderTarget(new CRenderTarget);
 }
 
-void CRenderTarget::Unbind()
+void CRenderTarget::UnbindAll()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
