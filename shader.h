@@ -24,7 +24,7 @@ public:
 	CShader();
 	~CShader();
 
-	static Shader Create();
+	static Shader Create(); 
 };
 
 
@@ -33,6 +33,7 @@ public:
 class CBlockShader : public CShader {
 public:
 	UniformMatrix mvp;
+	UniformMatrix mv;
 	CBlockShader();
 
 	static BlockShader Create();
@@ -42,6 +43,8 @@ public:
 class CScreenShader : public CShader {
 public:
 
-	UniformInt tex;
+	//UniformInt tex;
+	UniformSampler2DArray textures;
+	UniformMatrix projection;
 	static ScreenShader Create();
 };
