@@ -45,6 +45,11 @@ public:
 	void Set(std::vector<int> & integers);
 };
 
+class UniformVec3Array : public Uniform {
+public:
+	void Set(int vectorCount, float* buffer);
+};
+
 class UniformSampler2DArray : public UniformIntArray {
 public:
 	void Set(std::vector<TextureUnit> & units);

@@ -46,5 +46,6 @@ public:
 	//UniformInt tex;
 	UniformSampler2DArray textures;
 	UniformMatrix projection;
+	UniformVec3Array ssao_kernel;
 	static ScreenShader Create();
 };

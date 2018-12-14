@@ -78,3 +78,11 @@ void UniformSampler2DArray::Set(std::vector<TextureUnit>& units)
 	glUniform1iv(this->location, integers.size(), &integers[0]);
 	glUseProgram(0);*/
 }
+
+void UniformVec3Array::Set(int vectorCount, float * buffer)
+{
+	glUseProgram(this->program);
+	//glUniform1iv(this->location, integers.size(), &integers[0]);
+	glUniform3fv(this->location, vectorCount, buffer);
+	glUseProgram(0);
+}

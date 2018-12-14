@@ -24,8 +24,8 @@
 
 
 
-
-
+extern float ssao_kernel_256[];
+extern float ssao_kernel_128[];
 class Test : public Game {
 
 public:
@@ -93,7 +93,7 @@ public:
 		rendertarget->depth_buffer->Bind(TextureUnit::TEXTURE3);
 
 		screen_shader->projection.Set(projection);
-
+		
 		screen_renderer->Draw();
 
 		auto err = glGetError();
@@ -142,8 +142,11 @@ public:
 
 		screen_shader->LocateUniform("textures", screen_shader->textures);
 		screen_shader->LocateUniform("projection", screen_shader->projection);
+		screen_shader->LocateUniform("ssao_kernel", screen_shader->ssao_kernel);
 		auto units = std::vector<TextureUnit>({ TEXTURE0,TEXTURE1 ,TEXTURE2 ,TEXTURE3 });
 		screen_shader->textures.Set(units);
+		/*screen_shader->ssao_kernel.Set(256, ssao_kernel_256);*/
+		screen_shader->ssao_kernel.Set(128, ssao_kernel_128);
 
 		screen_renderer = CScreenRenderer::Create(screen_shader);
 
