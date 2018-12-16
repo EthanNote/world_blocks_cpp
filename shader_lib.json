@@ -1,0 +1,12 @@
+[
+  {
+    "name": "AutoScreenShader",
+    "identifier": "screen_shader",
+    "source": ["./shader/screen/screen.vs", "./shader/screen/screen.fs", "./shader/screen/screen.gs"]
+  },
+  {
+    "name": "AutoBlockShader",
+    "identifier": "block_shader",
+    "source": ["./shader/block/block.vs", "./shader/block/block.fs", "./shader/block/block.gs"]
+  }
+]
