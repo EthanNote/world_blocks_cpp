@@ -85,7 +85,11 @@ void shaderlib::loadshaders(){
 }
 """
 
-extern_assign = """    %s = %s(new C%s);"""
+extern_assign = """
+    %s = %s(new C%s);
+    %s -> Load();
+    %s -> LocateUniforms();
+"""
 
 #(uniform_class, uniform_cpp_name)
 uniform_declare_line = """    %s %s;"""
@@ -154,7 +158,7 @@ def gen(shaders):
     decl_gen += namespace_decl_gen
     impl_gen += namespace_impl_gen
     # print("E" namespace_impl_gen)
-    externs_assign_list = [extern_assign%(u["identifier"], u["name"], u["name"]) for u in shaders]
+    externs_assign_list = [extern_assign%(u["identifier"], u["name"], u["name"],u["identifier"],u["identifier"]) for u in shaders]
     load_impl_gen = load_impl%('\n'.join(externs_assign_list), )
     impl_gen +=load_impl_gen
     with open("shaderlib.h","w") as f:

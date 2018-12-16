@@ -3,7 +3,7 @@
 in vec2 uv;
 out vec4 color;
 
-uniform sampler2D tex;
+// uniform sampler2D tex;
 
 // layout(location=0) out vec4 color_out;
 // layout(location=1) out vec4 normal_out;
