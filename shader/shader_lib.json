@@ -1,0 +1,17 @@
+[
+  {
+    "name": "TestShader",
+    "identifier": "test_shader",
+    "source": [null, "./screen/screen.fs", null]
+  },
+  {
+    "name": "AutoScreenShader",
+    "identifier": "screen_shader",
+    "source": ["./screen/screen.vs", "./screen/screen.fs", "./screen/screen.gs"]
+  },
+  {
+    "name": "AutoBlockShader",
+    "identifier": "block_shader",
+    "source": ["./block/block.vs", "./block/block.fs", "./block/block.gs"]
+  }
+]
