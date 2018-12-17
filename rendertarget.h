@@ -29,6 +29,7 @@ public:
 	void CreateDepthBuffer(int width, int height);
 
 	RTCheckResult CheckStatus();
+	RTCheckResult CheckStatus(std::function<void(RTCheckResult)> callback);
 	
 	//void Bind();
 

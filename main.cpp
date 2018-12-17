@@ -90,10 +90,23 @@ public:
 		rt_deferred_geometry = CRenderTarget::Create();
 		rt_deferred_geometry->CreateDepthBuffer(800, 600);
 		rt_deferred_geometry->CreateColorBuffers(800, 600, 4);
-		auto check = rt_deferred_geometry->CheckStatus();
-		if (check != RTCheckResult::COMPLETE) {
-			std::cout << check << std::endl;
-		}
+
+
+		rt_ssao = CRenderTarget::Create();
+		rt_ssao->CreateColorBuffers(800, 600, 1);
+		
+		rt_deferred_geometry->CheckStatus([](RTCheckResult result) {
+			if (result != RTCheckResult::COMPLETE) {
+				std::cout<<"rt_deferred_geometry"<< result << std::endl;
+			}
+		});		
+
+		rt_ssao->CheckStatus([](RTCheckResult result) {
+			if (result != RTCheckResult::COMPLETE) {
+				std::cout<<"rt_ssao"<< result << std::endl;
+			}
+		});
+		
 
 		
 		auto units = std::vector<TextureUnit>({ TEXTURE0,TEXTURE1 ,TEXTURE2 ,TEXTURE3 });

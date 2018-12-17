@@ -55,6 +55,13 @@ RTCheckResult CRenderTarget::CheckStatus()
 	return RTCheckResult(Status);
 }
 
+RTCheckResult CRenderTarget::CheckStatus(std::function<void(RTCheckResult)> callback)
+{
+	auto result = this->CheckStatus();
+	callback(result);
+	return result;
+}
+
 //void CRenderTarget::Bind()
 //{
 //	glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
