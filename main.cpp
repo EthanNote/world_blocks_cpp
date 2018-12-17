@@ -56,8 +56,9 @@ public:
 			rt_deferred_geometry->color_buffers[2]->Bind(TextureUnit::TEXTURE2);
 			rt_deferred_geometry->depth_buffer->Bind(TextureUnit::TEXTURE3);
 
-			shaderlib::screen_shader->projection.Set(projection);
-			shaderlib::screen_shader->UseProgram();
+			shaderlib::ssao_shader->view_pos_map.Set(TEXTURE2);
+			shaderlib::ssao_shader->projection.Set(projection);
+			shaderlib::ssao_shader->UseProgram();
 			screen_render_operation->Draw();
 		});
 
@@ -97,8 +98,8 @@ public:
 		
 		auto units = std::vector<TextureUnit>({ TEXTURE0,TEXTURE1 ,TEXTURE2 ,TEXTURE3 });
 		
-		shaderlib::screen_shader->textures.Set(units);
-		shaderlib::screen_shader->ssao_kernel.Set(128, ssao_kernel_128);
+		//shaderlib::screen_shader->textures.Set(units);
+		shaderlib::ssao_shader->ssao_kernel.Set(128, ssao_kernel_128);
 
 
 		auto func = [&]() {

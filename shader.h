@@ -30,22 +30,22 @@ public:
 
 
 
-class CBlockShader : public CShader {
-public:
-	UniformMatrix mvp;
-	UniformMatrix mv;
-	CBlockShader();
-
-	static BlockShader Create();
-};
-
-
-class CScreenShader : public CShader {
-public:
-
-	//UniformInt tex;
-	UniformSampler2DArray textures;
-	UniformMatrix projection;
-	UniformVec3Array ssao_kernel;
-	static ScreenShader Create();
-};
+//class CBlockShader : public CShader {
+//public:
+//	UniformMatrix mvp;
+//	UniformMatrix mv;
+//	CBlockShader();
+//
+//	static BlockShader Create();
+//};
+//
+//
+//class CScreenShader : public CShader {
+//public:
+//
+//	//UniformInt tex;
+//	UniformSampler2DArray textures;
+//	UniformMatrix projection;
+//	UniformVec3Array ssao_kernel;
+//	static ScreenShader Create();
+//};

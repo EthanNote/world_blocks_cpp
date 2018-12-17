@@ -168,23 +168,23 @@ Shader CShader::Create()
 	return Shader(new CShader);
 }
 
-CBlockShader::CBlockShader()
-{
-	/*this->Load("shader/block/block.vs", "shader/block/block.fs", "shader/block/block.gs");
-	LocateUniform("MVP", &mvp);*/
-}
-
-BlockShader CBlockShader::Create()
-{
-	return BlockShader(new CBlockShader);
-}
-
-
-
-ScreenShader CScreenShader::Create()
-{
-	return ScreenShader(new CScreenShader);
-}
+//CBlockShader::CBlockShader()
+//{
+//	/*this->Load("shader/block/block.vs", "shader/block/block.fs", "shader/block/block.gs");
+//	LocateUniform("MVP", &mvp);*/
+//}
+//
+//BlockShader CBlockShader::Create()
+//{
+//	return BlockShader(new CBlockShader);
+//}
+//
+//
+//
+//ScreenShader CScreenShader::Create()
+//{
+//	return ScreenShader(new CScreenShader);
+//}
 
 
 float ssao_kernel_256[] = 
