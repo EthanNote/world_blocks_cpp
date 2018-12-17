@@ -55,9 +55,20 @@ RTCheckResult CRenderTarget::CheckStatus()
 	return RTCheckResult(Status);
 }
 
-void CRenderTarget::Bind()
+//void CRenderTarget::Bind()
+//{
+//	glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//}
+
+void CRenderTarget::Pass(std::function<void()> drawing)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	drawing();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 CRenderTarget::CRenderTarget()
@@ -76,7 +87,19 @@ RenderTarget CRenderTarget::Create()
 	return RenderTarget(new CRenderTarget);
 }
 
-void CRenderTarget::UnbindAll()
+//void CRenderTarget::UnbindAll()
+//{
+//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//}
+
+CRenderTarget* create_default() {
+	auto pRT = new CRenderTarget();
+	pRT->fbo = 0;
+	return pRT;
+}
+
+RenderTarget CRenderTarget::Screen()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	static RenderTarget rt = RenderTarget(create_default());
+	return rt;
 }

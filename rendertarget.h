@@ -1,6 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include<vector>
+#include<functional>
 #include "texture.h"
 
 class CRenderTarget;
@@ -19,6 +20,7 @@ enum RTCheckResult {
 class CRenderTarget
 {
 	GLuint fbo=0;	
+	friend CRenderTarget* create_default();
 public:
 	std::vector<Texture> color_buffers;
 	Texture depth_buffer;
@@ -28,10 +30,14 @@ public:
 
 	RTCheckResult CheckStatus();
 	
-	void Bind();
+	//void Bind();
+
+	void Pass(std::function<void()> drawing);
+
 	CRenderTarget();
 	~CRenderTarget();
 	
 	static RenderTarget Create();
-	static void UnbindAll();
+	//static void UnbindAll();
+	static RenderTarget Screen();
 };
