@@ -37,6 +37,7 @@ public:
 class UniformSampler2D : public UniformInt {
 public:
 	void Set(TextureUnit unit);
+	void Set(Texture texture);
 };
 
 class UniformIntArray : public Uniform {

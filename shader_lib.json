@@ -1,5 +1,10 @@
 [
   {
+    "name": "TextureShader",
+    "identifier": "texture_shader",
+    "source": ["./shader/screen/screen.vs", "./shader/screen/texture.fs", "./shader/screen/screen.gs"]
+  },
+  {
     "name": "SimpleSSAOShader",
     "identifier": "ssao_shader",
     "source": ["./shader/screen/screen.vs", "./shader/screen/ssao.fs", "./shader/screen/screen.gs"]

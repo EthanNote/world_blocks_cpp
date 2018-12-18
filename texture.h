@@ -3,7 +3,8 @@
 #include<GLFW/glfw3.h>
 #include<memory>
 #include<string>
-
+#include<map>
+#include<vector>
 enum TextureUnit {
 #ifdef GL_TEXTURE0
 	TEXTURE0 = GL_TEXTURE0,
@@ -62,14 +63,28 @@ typedef std::shared_ptr<CTexture> Texture;
 class CTexture
 {
 	GLuint name=-1;	
+	GLuint binding = 0;
+
 public:
 	GLuint GetName();
-	void Bind(TextureUnit unit);
-
+	void Bind(GLuint unit);
+	GLuint Bind();
+	GLuint GetBinding();
 	CTexture();
 	~CTexture();
 	static Texture Create(int width, int height);
 	static Texture CreateDepth(int width, int height);
 	static Texture Create(std::string fname);
 };
+
+//class CTextureBinding
+//{
+//	std::map<Texture, TextureUnit> unit;
+//public:
+//	CTextureBinding();
+//	~CTextureBinding();
+//
+//	TextureUnit operator [](Texture texture);
+//
+//};
 

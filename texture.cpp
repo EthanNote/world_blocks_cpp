@@ -20,10 +20,49 @@ GLuint CTexture::GetName()
 	return name;
 }
 
-void CTexture::Bind(TextureUnit unit)
+#define BINDING_SIZE 32
+
+CTexture* binded_textures[BINDING_SIZE] = { 0 };
+int loop_binding_index = 0;
+
+void CTexture::Bind(GLuint unit)
 {
+	if (unit<GL_TEXTURE0 || unit>GL_TEXTURE31) {
+		for (int i = 0; i < BINDING_SIZE; i++) {
+			if (!binded_textures[i]) {
+				unit = GL_TEXTURE0 + i;
+				Bind(unit);
+				return;
+			}
+		}
+	}
+	if (unit<GL_TEXTURE0 || unit>GL_TEXTURE31) {
+		if (loop_binding_index > 31) {
+			loop_binding_index = 0;
+		}
+		unit = GL_TEXTURE0 + loop_binding_index;
+		loop_binding_index++;
+		Bind(unit);
+		return;
+	}
+
+
 	glActiveTexture(unit);
 	glBindTexture(GL_TEXTURE_2D, this->name);
+	this->binding = unit;
+	binded_textures[unit - GL_TEXTURE0] = this;
+
+}
+
+GLuint CTexture::Bind()
+{
+	Bind(0);
+	return this->binding;
+}
+
+GLuint CTexture::GetBinding()
+{
+	return this->binding;
 }
 
 inline void set_t2d_params() {
@@ -58,3 +97,32 @@ Texture CTexture::CreateDepth(int width, int height)
 
 	return T;
 }
+
+
+
+//
+//CTextureBinding::CTextureBinding()
+//{
+//}
+//
+//
+//CTextureBinding::~CTextureBinding()
+//{
+//}
+//
+//TextureUnit CTextureBinding::operator[](Texture  texture)
+//{
+//	auto v = this->unit[texture];
+//	if (v) {
+//		return v;
+//	}
+//
+//	else {
+//		auto u = TextureUnit(this->unit.size()-1 + TextureUnit::TEXTURE0);
+//		this->unit[texture] = u;
+//		if (unit.size() > 8) {
+//			unit.
+//		}
+//		return u;
+//	}
+//}

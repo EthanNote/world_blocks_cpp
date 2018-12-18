@@ -62,6 +62,15 @@ void UniformSampler2D::Set(TextureUnit unit)
 	return UniformInt::Set((int)(unit - TextureUnit::TEXTURE0));
 }
 
+void UniformSampler2D::Set(Texture texture)
+{
+	auto binding = texture->GetBinding();
+	if (!binding) {
+		texture->Bind();
+	}
+	return UniformInt::Set(texture->GetBinding() - GL_TEXTURE0);
+}
+
 void UniformSampler2DArray::Set(std::vector<TextureUnit>& units)
 {
 	auto v = std::vector<int>(units.size(), 0);

@@ -14,7 +14,6 @@
 //#include "renderer.h"
 #include "rendertarget.h"
 #include "renderoperation.h"
-
 #include <thread>
 
 extern float ssao_kernel_256[];
@@ -27,7 +26,7 @@ public:
 	RenderTarget rt_deferred_geometry = nullptr;
 	RenderTarget rt_lightmap = nullptr;
 	RenderTarget rt_ssao = nullptr;
-
+	RenderTarget rt_merge = nullptr;
 
 	RenderOperation screen_render_operation = CSimpleRenderOperation::Create();
 	RenderOperation block_render_operation = nullptr;
@@ -36,7 +35,6 @@ public:
 		if (!Game::GameLoop()) {
 			return false;
 		}
-
 
 		auto mvp = camera->GetMVP();
 		auto mv = camera->GetModelView();
@@ -51,34 +49,24 @@ public:
 		});
 
 		rt_ssao->Pass([&]() {
-			rt_deferred_geometry->color_buffers[0]->Bind(TextureUnit::TEXTURE0);
-			rt_deferred_geometry->color_buffers[1]->Bind(TextureUnit::TEXTURE1);
-			rt_deferred_geometry->color_buffers[2]->Bind(TextureUnit::TEXTURE2);
-			rt_deferred_geometry->depth_buffer->Bind(TextureUnit::TEXTURE3);
-
-			shaderlib::ssao_shader->view_pos_map.Set(TEXTURE2);
+			shaderlib::ssao_shader->view_pos_map.Set(rt_deferred_geometry->color_buffers[2]);
 			shaderlib::ssao_shader->projection.Set(projection);
 			shaderlib::ssao_shader->UseProgram();
 			screen_render_operation->Draw();
 		});
 
-		CRenderTarget::Screen()->Pass([&] {
-
-			rt_ssao->color_buffers[0]->Bind(TextureUnit::TEXTURE2);
-			shaderlib::merge_shader->texture_ssao.Set(TextureUnit::TEXTURE2);
-			shaderlib::merge_shader->texture_color.Set(TextureUnit::TEXTURE0);
+		rt_merge->Pass([&] {
+			shaderlib::merge_shader->texture_ssao.Set(rt_ssao->color_buffers[0]);
+			shaderlib::merge_shader->texture_color.Set(rt_deferred_geometry->color_buffers[0]);
 			shaderlib::merge_shader->UseProgram();
 			screen_render_operation->Draw();
 
-			/*rt_deferred_geometry->color_buffers[0]->Bind(TextureUnit::TEXTURE0);
-			rt_deferred_geometry->color_buffers[1]->Bind(TextureUnit::TEXTURE1);
-			rt_deferred_geometry->color_buffers[2]->Bind(TextureUnit::TEXTURE2);
-			rt_deferred_geometry->depth_buffer->Bind(TextureUnit::TEXTURE3);
+		});
 
-			shaderlib::ssao_shader->view_pos_map.Set(TEXTURE2);
-			shaderlib::ssao_shader->projection.Set(projection);
-			shaderlib::ssao_shader->UseProgram();
-			screen_render_operation->Draw();*/
+		CRenderTarget::Screen()->Pass([&] {
+			shaderlib::texture_shader->tex.Set(rt_merge->color_buffers[0]);
+			shaderlib::texture_shader->UseProgram();
+			screen_render_operation->Draw();
 		});
 
 		auto err = glGetError();
@@ -109,23 +97,31 @@ public:
 		rt_deferred_geometry = CRenderTarget::Create();
 		rt_deferred_geometry->CreateDepthBuffer(800, 600);
 		rt_deferred_geometry->CreateColorBuffers(800, 600, 4);
-
-
-		rt_ssao = CRenderTarget::Create();
-		rt_ssao->CreateColorBuffers(800, 600, 1);
-		
 		rt_deferred_geometry->CheckStatus([](RTCheckResult result) {
 			if (result != RTCheckResult::COMPLETE) {
 				std::cout<<"rt_deferred_geometry"<< result << std::endl;
 			}
 		});		
 
+
+		rt_ssao = CRenderTarget::Create();
+		rt_ssao->CreateColorBuffers(800, 600, 1);
 		rt_ssao->CheckStatus([](RTCheckResult result) {
 			if (result != RTCheckResult::COMPLETE) {
 				std::cout<<"rt_ssao"<< result << std::endl;
 			}
 		});
 		
+
+
+		rt_merge = CRenderTarget::Create();
+		rt_merge->CreateColorBuffers(800, 600, 1);
+		rt_merge->CreateDepthBuffer(800, 600);
+		rt_merge->CheckStatus([](RTCheckResult result) {
+			if (result != RTCheckResult::COMPLETE) {
+				std::cout << "rt_ssao" << result << std::endl;
+			}
+		});
 
 		
 		auto units = std::vector<TextureUnit>({ TEXTURE0,TEXTURE1 ,TEXTURE2 ,TEXTURE3 });
