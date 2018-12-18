@@ -50,7 +50,7 @@ public:
 			block_render_operation->Draw();			
 		});
 
-		CRenderTarget::Screen()->Pass([&] {
+		rt_ssao->Pass([&]() {
 			rt_deferred_geometry->color_buffers[0]->Bind(TextureUnit::TEXTURE0);
 			rt_deferred_geometry->color_buffers[1]->Bind(TextureUnit::TEXTURE1);
 			rt_deferred_geometry->color_buffers[2]->Bind(TextureUnit::TEXTURE2);
@@ -60,6 +60,25 @@ public:
 			shaderlib::ssao_shader->projection.Set(projection);
 			shaderlib::ssao_shader->UseProgram();
 			screen_render_operation->Draw();
+		});
+
+		CRenderTarget::Screen()->Pass([&] {
+
+			rt_ssao->color_buffers[0]->Bind(TextureUnit::TEXTURE2);
+			shaderlib::merge_shader->texture_ssao.Set(TextureUnit::TEXTURE2);
+			shaderlib::merge_shader->texture_color.Set(TextureUnit::TEXTURE0);
+			shaderlib::merge_shader->UseProgram();
+			screen_render_operation->Draw();
+
+			/*rt_deferred_geometry->color_buffers[0]->Bind(TextureUnit::TEXTURE0);
+			rt_deferred_geometry->color_buffers[1]->Bind(TextureUnit::TEXTURE1);
+			rt_deferred_geometry->color_buffers[2]->Bind(TextureUnit::TEXTURE2);
+			rt_deferred_geometry->depth_buffer->Bind(TextureUnit::TEXTURE3);
+
+			shaderlib::ssao_shader->view_pos_map.Set(TEXTURE2);
+			shaderlib::ssao_shader->projection.Set(projection);
+			shaderlib::ssao_shader->UseProgram();
+			screen_render_operation->Draw();*/
 		});
 
 		auto err = glGetError();
@@ -116,8 +135,8 @@ public:
 
 
 		auto func = [&]() {
-			for (int i = 0; i < 64; i++) {
-				for (int j = 0; j < 64; j++) {
+			for (int i = 0; i < 128; i++) {
+				for (int j = 0; j < 128; j++) {
 					for (int k = 0; k <=j; k++) {
 						Block b{ i,k,j,1,0,0, {-1,-1,-1,-1,-1,-1,-1,-1} };
 						block_pool->LockWrite();
