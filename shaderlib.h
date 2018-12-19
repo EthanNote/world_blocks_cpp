@@ -37,6 +37,7 @@ typedef std::shared_ptr<CMergeShader> MergeShader;
 
 class CBlockShader : public CShader{
 public:
+    UniformVec4Array palette;
     UniformMatrix MVP;
     UniformMatrix MV;
     void Load();

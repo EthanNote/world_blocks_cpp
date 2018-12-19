@@ -95,3 +95,11 @@ void UniformVec3Array::Set(int vectorCount, float * buffer)
 	glUniform3fv(this->location, vectorCount, buffer);
 	glUseProgram(0);
 }
+
+void UniformVec4Array::Set(int vectorCount, float * buffer)
+{
+	glUseProgram(this->program);
+	//glUniform1iv(this->location, integers.size(), &integers[0]);
+	glUniform4fv(this->location, vectorCount, buffer);
+	glUseProgram(0);
+}

@@ -6,7 +6,7 @@
 Block & CBlockPool::Alloc()
 {
 	this->LockWrite();
-	this->blocks.push_back({ 0,0,0,-1,0,0, {-1,-1,-1,-1,-1,-1,-1,-1} });
+	this->blocks.push_back({ 0,0,0,-1,0,0,0, {-1,-1,-1,-1,-1,-1,-1,-1} });
 	auto it = this->blocks.end();
 	it--;
 

@@ -34,6 +34,7 @@ void CMergeShader::Load(){
 }
 
 void CBlockShader::LocateUniforms(){
+    this->LocateUniform("palette", this->palette);
     this->LocateUniform("MVP", this->MVP);
     this->LocateUniform("MV", this->MV);
 }

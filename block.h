@@ -11,16 +11,28 @@ public:
 	int y;
 	int z;
 	int level;
-	int type_id;
+	int color;
 	int face_mask;
+	int type_id;
 
 	int children[8];
 };
+
+struct BlockColor {
+	float r;
+	float g;
+	float b;
+	float a;
+};
+
+
+typedef std::vector<BlockColor> BlockPalette;
 
 
 class CBlockPool {
 
 	std::shared_mutex lock;
+
 public:
 	std::vector<Block> blocks;
 	Block & Alloc();

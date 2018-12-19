@@ -31,6 +31,8 @@ public:
 	RenderOperation screen_render_operation = CSimpleRenderOperation::Create();
 	RenderOperation block_render_operation = nullptr;
 
+	BlockPalette palette;
+
 	virtual bool GameLoop() {
 		if (!Game::GameLoop()) {
 			return false;
@@ -129,15 +131,31 @@ public:
 		//shaderlib::screen_shader->textures.Set(units);
 		shaderlib::ssao_shader->ssao_kernel.Set(128, ssao_kernel_128);
 
+		this->palette.clear();
+
+		float values[] = { 0, 0.25, 0.5, 0.75, 1.0 };
+		for (int r = 0; r < 5; r++) {
+			for (int g = 0; g < 5; g++) {
+				for (int b = 0; b < 5; b++) {
+					for (int a = 0; a < 5; a++) {
+						this->palette.push_back({ values[r],values[g],values[b],values[a] });
+					}
+				}
+			}
+		}
+
+		shaderlib::block_shader->palette.Set(palette.size(), &palette[0].r);
 
 		auto func = [&]() {
+			int c = 0;
 			for (int i = 0; i < 128; i++) {
 				for (int j = 0; j < 128; j++) {
 					for (int k = 0; k <=j; k++) {
-						Block b{ i,k,j,1,0,0, {-1,-1,-1,-1,-1,-1,-1,-1} };
+						Block b{ i,k,j,1,c%625,0, 0, {-1,-1,-1,-1,-1,-1,-1,-1} };
 						block_pool->LockWrite();
 						block_pool->blocks.push_back(b);
 						block_pool->UnlockWrite();
+						c++;
 					}
 					//std::this_thread::sleep_for(std::chrono::microseconds(0));
 				}

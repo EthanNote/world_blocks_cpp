@@ -112,6 +112,7 @@ single_type_map = {
     'int':'UniformInt',
     'float':'UniformFloat',
     'vec3':'UniformVec3',
+    'vec4':'UniformVec4',
     'mat4':'UniformMatrix',
     'sampler2D':'UniformSampler2D',
 }
@@ -120,6 +121,8 @@ array_type_map = {
     'int':'UniformIntArray',
     'float':'UniformFloatArray',
     'vec3':'UniformVec3Array',
+    'vec4':'UniformVec4Array',
+    'mat4':'UniformMat4Array',
     'sampler2D':'UniformSampler2DArray',
 }
 

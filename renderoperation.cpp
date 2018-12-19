@@ -25,18 +25,23 @@ RenderOperation CSimpleRenderOperation::Create()
 	return RenderOperation(new CSimpleRenderOperation);
 }
 
+
+
+
 void CBlockRenderOperation::Draw()
 {
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glEnableVertexAttribArray(0);
-
+	glEnableVertexAttribArray(1);
 	this->pool->LockRead();
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Block), &this->pool->blocks[0]);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Block), &this->pool->blocks[0].color);
 	glDrawArrays(GL_POINTS, 0, this->pool->blocks.size());
 	this->pool->UnlockRead();
 
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 }
 
 RenderOperation CBlockRenderOperation::Create(BlockPool pool)
