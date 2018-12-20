@@ -57,26 +57,53 @@ std::shared_ptr<CBlockPool> CBlockPool::Create()
 	return std::shared_ptr<CBlockPool>(new CBlockPool);
 }
 
-void BlockTree::_dfs(Block & root, blockcallback callback)
+//void BlockTree::_dfs(Block & root, blockcallback callback)
+//{
+//	callback(root);
+//	for (int i = 0; i < 8; i++) {
+//		if (root.children[i] >= 0) {
+//			_dfs(this->pool->blocks[root.children[i]], callback);
+//		}
+//	}
+//}
+//
+//BlockTree::BlockTree(CBlockPool & pool, Block & root)
+//{
+//	this->pool = &pool;
+//	this->root = &root;
+//}
+//
+//
+//
+//
+//
+//void BlockTree::DFS(blockcallback)
+//{
+//}
+
+bool Block::IsContain(Block* another)
 {
-	callback(root);
-	for (int i = 0; i < 8; i++) {
-		if (root.children[i] >= 0) {
-			_dfs(this->pool->blocks[root.children[i]], callback);
-		}
+	//int inc = 1 << (this->level-1);
+	int mask = ~(-1 << (this->level));
+	return (
+		another->x & mask == this->x &&
+		another->y & mask == this->y &&
+		another->z & mask == this->z
+		);
+	
+}
+
+int Block::GetChildIndex(Block * another)
+{
+	int i = 0;
+	if (another->x > this->x) {
+		i |= 1;
 	}
-}
-
-BlockTree::BlockTree(CBlockPool & pool, Block & root)
-{
-	this->pool = &pool;
-	this->root = &root;
-}
-
-
-
-
-
-void BlockTree::DFS(blockcallback)
-{
+	if (another->y > this->y) {
+		i |= 2;
+	}
+	if (another->z > this->z) {
+		i |= 4;
+	}
+	return i;
 }

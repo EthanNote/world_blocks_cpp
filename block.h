@@ -16,6 +16,11 @@ public:
 	int type_id;
 
 	int children[8];
+	int parent;
+
+	bool IsContain(Block* another);
+	int GetChildIndex(Block* another);
+
 };
 
 struct BlockColor {
@@ -49,18 +54,10 @@ public:
 
 typedef std::shared_ptr<CBlockPool> BlockPool;
 
-typedef void (*blockcallback)(Block&);
+typedef void (*blockcallback)(Block*);
 
-class BlockTree {
-
-private:
-	void _dfs(Block & root, blockcallback callback);
-
-protected:
-	CBlockPool* pool;
-	Block* root;
-	
-public:
-	BlockTree(CBlockPool& pool, Block&root);
-	void DFS(blockcallback callback);
-};
+//class BlockTree {
+//
+//
+//
+//};
