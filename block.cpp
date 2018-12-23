@@ -84,25 +84,30 @@ std::shared_ptr<CBlockPool> CBlockPool::Create()
 bool Block::IsContain(Block* another)
 {
 	//int inc = 1 << (this->level-1);
-	int mask = ~(-1 << (this->level));
-	return (
-		another->x & mask == this->x &&
-		another->y & mask == this->y &&
-		another->z & mask == this->z
-		);
-	
+	int mask = -1 << (this->level);
+	int mx = another->x & mask;
+	int my = another->y & mask;
+	int mz = another->z & mask;
+	return mx == this->x && my == this->y && mz == this->z;
+	//return (
+	//	another->x & mask == this->x &&
+	//	another->y & mask == this->y &&
+	//	another->z & mask == this->z
+	//	);
+	//
 }
 
 int Block::GetChildIndex(Block * another)
 {
+	int mask = 1 << (this->level - 1);
 	int i = 0;
-	if (another->x > this->x) {
+	if (another->x & mask) {
 		i |= 1;
 	}
-	if (another->y > this->y) {
+	if (another->y & mask) {
 		i |= 2;
 	}
-	if (another->z > this->z) {
+	if (another->z & mask) {
 		i |= 4;
 	}
 	return i;
