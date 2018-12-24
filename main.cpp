@@ -16,6 +16,9 @@
 #include "renderoperation.h"
 #include "blocktree.h"
 #include <thread>
+
+#include "shell.h"
+
 extern float ssao_kernel_256[];
 extern float ssao_kernel_128[];
 
@@ -206,6 +209,9 @@ public:
 auto game = std::shared_ptr<Test>(new Test());
 
 int main() {
-	Game::Run(game);
+	//Game::Run(game);
+	//shell::init();
+	shell::start_idle();
+	//shell::destroy();
 	return 0;
 }
