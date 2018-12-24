@@ -209,9 +209,9 @@ public:
 auto game = std::shared_ptr<Test>(new Test());
 
 int main() {
-	//Game::Run(game);
-	//shell::init();
 	shell::start_idle();
+	Game::Run(game);
+	//shell::init();
 	//shell::destroy();
 	return 0;
 }
