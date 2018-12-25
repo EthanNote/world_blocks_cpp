@@ -15,10 +15,10 @@ private:
 	void _dfs(int buffer_index, blockcallback callback);
 
 protected:
-	BlockPool pool;
 	//Block* root;
 
 public:
+	BlockPool pool;
 	//BlockTree(CBlockPool& pool, Block&root);
 	void DFS(blockcallback callback);
 	void Insert(Block& block);

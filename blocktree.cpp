@@ -74,7 +74,10 @@ void CBlockTree::Insert(Block & block)
 			non_leaf_node.color = -1;
 
 			//push back policy
+			pool->LockWrite();
 			pool->blocks.push_back(non_leaf_node);
+			pool->UnlockWrite();
+
 		}
 		//parent = &pool->blocks[parent->children[child_slot_index]];
 		parent_index = child_index;

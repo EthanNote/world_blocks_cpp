@@ -30,6 +30,9 @@ RenderOperation CSimpleRenderOperation::Create()
 
 void CBlockRenderOperation::Draw()
 {
+	if (this->pool->blocks.size() < 1) {
+		return;
+	}
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glEnableVertexAttribArray(0);
