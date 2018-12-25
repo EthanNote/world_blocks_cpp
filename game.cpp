@@ -26,7 +26,7 @@ int Game::Init()
 		return 1;
 	}
 
-	window = glfwCreateWindow(800, 600, "Hello Triangle", NULL, NULL);
+	window = glfwCreateWindow(800, 600, "Blocks", NULL, NULL);
 	if (!window) {
 		fprintf(stderr, "ERROR: could not open window with GLFW3\n");
 		glfwTerminate();

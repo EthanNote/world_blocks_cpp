@@ -19,10 +19,29 @@ static int cam_pos(lua_State *L) {
 }
 
 static int cam_yall_pitch_roll(lua_State *L) {
-
+	if (camfps == nullptr) {
+		return 0;
+	}
+	lua_pushnumber(L, camfps->yall);
+	lua_pushnumber(L, camfps->pitch);
+	lua_pushnumber(L, 0);
+	return 3;
 }
 
 void shell::camera::init_fps(std::shared_ptr<CameraFPS> cam)
 {
 	camfps = cam;
+	static const struct luaL_Reg funcs[] = {
+		{ "pos", cam_pos },
+		{ "yall_pitch_roll", cam_yall_pitch_roll },
+		{ NULL, NULL },
+	};
+
+	lua_getglobal(L, "camera");
+	if (lua_isnil(L, -1)) {
+		lua_pop(L, 1);
+		lua_newtable(L);
+	}
+	luaL_setfuncs(L, funcs, 0);
+	lua_setglobal(L, "camera");
 }

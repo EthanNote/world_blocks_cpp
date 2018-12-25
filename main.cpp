@@ -70,8 +70,8 @@ public:
 		});
 
 		CRenderTarget::Screen()->Pass([&] {
-			glClearColor(1, 1, 1, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			/*glClearColor(1, 1, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);*/
 			shaderlib::texture_shader->tex.Set(rt_merge->color_buffers[0]);
 			shaderlib::texture_shader->UseProgram();
 			screen_render_operation->Draw();
@@ -96,8 +96,9 @@ public:
 		auto controller = camera->CreateController();
 		controllers.push_back(controller);
 
-		camera->position = glm::vec3(-1, 10, -3);
-		camera->yall = 10;
+		camera->position = glm::vec3(-1, 30, -3);
+		camera->yall = -142;
+		camera->pitch = -23;
 
 
 		block_pool = CBlockPool::Create();
@@ -148,7 +149,7 @@ public:
 			this->palette.push_back({ 0,0,0,0 });
 		}*/
 
-		float values[] = { 0.1, 0.25, 0.5, 0.75, 1.0 };
+		float values[] = { 0.6, 0.25, 0.5, 0.75, 1.0 };
 		for (int r = 0; r < 5; r++) {
 			for (int g = 0; g < 5; g++) {
 				for (int b = 0; b < 5; b++) {
@@ -174,20 +175,24 @@ public:
 
 			shell::crafting::init(tree);*/
 
+		shell::camera::init_fps(camera);
+
 		auto func = [&]() {
 			CPerlin perlin;
-			perlin.persistence = 0.5;
-			perlin.Number_Of_Octaves = 1;
+			perlin.persistence = 5;
+			perlin.Number_Of_Octaves = 4;
 			int c = 0;
-			for (int i = 0; i < 128; i++) {
-				for (int j = 0; j < 128; j++) {
-					double n = perlin.Noise2D(double(i), double(j));
-					printf("%d %d %lf\n", i, j, n);
-					Block b{ i,int(n*10)+10,j,0,c % 625,0, 0, {-1,-1,-1,-1,-1,-1,-1,-1}, 0 };
-					block_pool->LockWrite();
-					block_pool->blocks.push_back(b);
-					block_pool->UnlockWrite();
+			for (int i = 0; i < 1024; i++) {
+				block_pool->LockWrite();
+				for (int j = 0; j < 1024; j++) {
+					double n = perlin.Noise2D(i*0.005, j*0.005);
+					//printf("%d %d %lf\n", i, j, n);
+					for (int k = 0; k < 3; k++) {
+						Block b{ i,int(n) + 10 - k,j, 0,0,0, 0, {-1,-1,-1,-1,-1,-1,-1,-1}, 0 };
+						block_pool->blocks.push_back(b);
+					}
 					c++;
+
 
 
 					/*for (int k = 0; k <=j; k++) {
@@ -199,6 +204,7 @@ public:
 					}*/
 					//std::this_thread::sleep_for(std::chrono::microseconds(0));
 				}
+				block_pool->UnlockWrite();
 			}
 		};
 
