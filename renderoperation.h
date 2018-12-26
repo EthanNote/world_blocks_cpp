@@ -1,6 +1,6 @@
 #pragma once
 #include "block.h"
-
+#include "terrine.h"
 
 class CRenderOperation
 {
@@ -26,3 +26,11 @@ public:
 	static RenderOperation Create(BlockPool pool);
 };
 typedef std::shared_ptr<CBlockRenderOperation> BlockRenderOperation;
+
+
+class CTerrineRenderOperation : public CRenderOperation {
+public:
+	Terrine terrine;
+	void Draw() override;
+	static RenderOperation Create(Terrine terrine);
+};

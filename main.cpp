@@ -96,7 +96,7 @@ public:
 		auto controller = camera->CreateController();
 		controllers.push_back(controller);
 
-		camera->position = glm::vec3(-1, 30, -3);
+		camera->position = glm::vec3(-1, 300, -3);
 		camera->yall = -142;
 		camera->pitch = -23;
 
@@ -182,13 +182,18 @@ public:
 			perlin.persistence = 5;
 			perlin.Number_Of_Octaves = 4;
 			int c = 0;
-			for (int i = 0; i < 1024; i++) {
+			for (int i = 0; i < 512; i++) {
 				block_pool->LockWrite();
-				for (int j = 0; j < 1024; j++) {
+				for (int j = 0; j < 512; j++) {
 					double n = perlin.Noise2D(i*0.005, j*0.005);
 					//printf("%d %d %lf\n", i, j, n);
+					int y = int(n) + 256;
+					if (y < 5)
+					{
+						continue;
+					}
 					for (int k = 0; k < 3; k++) {
-						Block b{ i,int(n) + 10 - k,j, 0,0,0, 0, {-1,-1,-1,-1,-1,-1,-1,-1}, 0 };
+						Block b{ i,y - k,j, 0,0,0, 0, {-1,-1,-1,-1,-1,-1,-1,-1}, 0 };
 						block_pool->blocks.push_back(b);
 					}
 					c++;
