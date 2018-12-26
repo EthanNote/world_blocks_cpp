@@ -60,10 +60,16 @@ void CTerrineRenderOperation::Draw()
 		return;
 	}
 
+
 	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	/*glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TRIANGLE_VERTEX), &terrine->mesh[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TRIANGLE_VERTEX), &terrine->mesh[0]);
+	glDrawArrays(GL_TRIANGLES, 0, terrine->mesh.size()*3);*/
+
+	glBindBuffer(GL_ARRAY_BUFFER, terrine->vbo);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TRIANGLE_VERTEX), 0);
 	glDrawArrays(GL_TRIANGLES, 0, terrine->mesh.size() * 3);
 
 	glDisableVertexAttribArray(0);

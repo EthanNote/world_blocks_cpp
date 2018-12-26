@@ -18,5 +18,10 @@
     "name": "BlockShader",
     "identifier": "block_shader",
     "source": ["./shader/block/block.vs", "./shader/block/block.fs", "./shader/block/block.gs"]
+  },
+  {
+    "name": "TerrineShader",
+    "identifier": "terrine_shader",
+    "source": ["./shader/terrine/terrine.vs", "./shader/terrine/terrine.fs", null]
   }
 ]

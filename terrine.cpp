@@ -49,11 +49,14 @@ void CTerrine::Build(std::function<double(int x, int y)> func)
 
 
 
-
+#include<GL\glew.h>
 void CTerrine::BuildVoxelMesh()
 {
+	if (!vbo) {
+		glGenBuffers(1, &vbo);
+	}
 	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < 4; j++) {
+		for (int j = 0; j < size; j++) {
 			int h = GetHeight(i, j); // map height
 			float x = XMap(i);  // corner coordinate
 			float z = ZMap(j);
@@ -85,8 +88,8 @@ void CTerrine::BuildVoxelMesh()
 					{ x_1, h,   z_1 },
 					{ x_1, h_1, z_1 }
 				};
-				mesh.push_back({ v[0], v[1], v[2] });
-				mesh.push_back({ v[2], v[1], v[3] });
+				mesh.push_back({ v_h[0], v_h[1], v_h[2] });
+				mesh.push_back({ v_h[2], v_h[1], v_h[3] });
 			}
 			if (i < size - 1) {
 				int h_1 = GetHeight(i+1, j);
@@ -96,9 +99,29 @@ void CTerrine::BuildVoxelMesh()
 					{ x_1, h_1, z   },
 					{ x_1, h_1, z_1 }
 				};
-				mesh.push_back({ v[0], v[1], v[2] });
-				mesh.push_back({ v[2], v[1], v[3] });
+				mesh.push_back({ v_h[0], v_h[1], v_h[2] });
+				mesh.push_back({ v_h[2], v_h[1], v_h[3] });
 			}
 		}
 	}
+	if (vbo) {
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, mesh.size() * 3 * 3 * sizeof(float), &mesh[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+}
+
+#include "perlin.h"
+
+Terrine terrine::factory::Create()
+{
+	auto t = new CTerrine;
+	t->Init(1024);
+	CPerlin perlin;
+	perlin.persistence = 5;
+	perlin.Number_Of_Octaves = 4;
+
+	t->Build([&perlin](int x, int y) {return perlin.Noise2D(x*0.005, y*0.005); });
+	t->BuildVoxelMesh();
+	return Terrine(t);
 }

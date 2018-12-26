@@ -23,6 +23,7 @@ class CTerrine
 	std::function<float(int i)> ZMap;
 public:
 
+	unsigned int vbo=0;
 	int GetSize();
 	bool IsValid();
 	std::vector<int> height_map;
@@ -39,3 +40,9 @@ public:
 
 
 typedef std::shared_ptr<CTerrine> Terrine;
+
+namespace terrine {
+	namespace factory {
+		Terrine Create();
+	}
+}

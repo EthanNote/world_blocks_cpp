@@ -19,6 +19,7 @@
 
 #include "shell.h"
 #include "perlin.h"
+#include "terrine.h"
 extern float ssao_kernel_256[];
 extern float ssao_kernel_128[];
 
@@ -33,10 +34,11 @@ public:
 
 	RenderOperation screen_render_operation = CSimpleRenderOperation::Create();
 	RenderOperation block_render_operation = nullptr;
+	RenderOperation terrine_render_operation = nullptr;
 
 	BlockPalette palette;
 	BlockTree tree = nullptr;
-
+	Terrine terrine = nullptr;
 	virtual bool GameLoop() {
 		if (!Game::GameLoop()) {
 			return false;
@@ -49,9 +51,16 @@ public:
 		shaderlib::block_shader->MVP.Set(mvp);
 		shaderlib::block_shader->MV.Set(mv);
 
+		shaderlib::terrine_shader->MVP.Set(mvp);
+		shaderlib::terrine_shader->MV.Set(mv);
+
 		rt_deferred_geometry->Pass([&]() {
 			shaderlib::block_shader->UseProgram();
 			block_render_operation->Draw();
+
+			shaderlib::terrine_shader->UseProgram();
+			terrine_render_operation->Draw();
+			
 		});
 
 		rt_ssao->Pass([&]() {
@@ -96,7 +105,7 @@ public:
 		auto controller = camera->CreateController();
 		controllers.push_back(controller);
 
-		camera->position = glm::vec3(-1, 300, -3);
+		camera->position = glm::vec3(64, 16, -3);
 		camera->yall = -142;
 		camera->pitch = -23;
 
@@ -177,14 +186,17 @@ public:
 
 		shell::camera::init_fps(camera);
 
+		terrine = terrine::factory::Create();
+		terrine_render_operation = CTerrineRenderOperation::Create(terrine);
+
 		auto func = [&]() {
 			CPerlin perlin;
 			perlin.persistence = 5;
 			perlin.Number_Of_Octaves = 4;
 			int c = 0;
-			for (int i = 0; i < 512; i++) {
+			for (int i = 0; i < 64; i++) {
 				block_pool->LockWrite();
-				for (int j = 0; j < 512; j++) {
+				for (int j = 0; j < 64; j++) {
 					double n = perlin.Noise2D(i*0.005, j*0.005);
 					//printf("%d %d %lf\n", i, j, n);
 					int y = int(n) + 256;
