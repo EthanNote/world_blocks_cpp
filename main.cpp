@@ -58,8 +58,10 @@ public:
 			shaderlib::block_shader->UseProgram();
 			block_render_operation->Draw();
 
-			shaderlib::terrine_shader->UseProgram();
-			terrine_render_operation->Draw();
+			if (terrine_render_operation != nullptr) {
+				shaderlib::terrine_shader->UseProgram();
+				terrine_render_operation->Draw();
+			}
 			
 		});
 
@@ -105,9 +107,10 @@ public:
 		auto controller = camera->CreateController();
 		controllers.push_back(controller);
 
-		camera->position = glm::vec3(64, 16, -3);
-		camera->yall = -142;
-		camera->pitch = -23;
+		camera->position = glm::vec3(512, 48, 512);
+		camera->yall = -258;
+		camera->pitch = -20;
+	
 
 
 		block_pool = CBlockPool::Create();
@@ -188,6 +191,8 @@ public:
 
 		terrine = terrine::factory::Create();
 		terrine_render_operation = CTerrineRenderOperation::Create(terrine);
+
+		//new std::thread([&] {terrine_render_operation = CTerrineRenderOperation::Create(terrine); });
 
 		auto func = [&]() {
 			CPerlin perlin;

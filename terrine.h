@@ -2,6 +2,7 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include <shared_mutex>
 
 struct TERRINE_TRIANGLE_VERTEX {
 	float x;
@@ -22,12 +23,15 @@ class CTerrine
 	std::function<float(int i)> XMap;
 	std::function<float(int i)> ZMap;
 public:
-
 	unsigned int vbo=0;
 	int GetSize();
 	bool IsValid();
 	std::vector<int> height_map;
+	
 	std::vector<TERRINE_TRIANGLE> mesh;
+	std::shared_mutex meshlock;
+	
+	
 	int GetHeight(int i, int j);
 	CTerrine();
 	~CTerrine();

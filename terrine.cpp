@@ -52,11 +52,12 @@ void CTerrine::Build(std::function<double(int x, int y)> func)
 #include<GL\glew.h>
 void CTerrine::BuildVoxelMesh()
 {
-	if (!vbo) {
-		glGenBuffers(1, &vbo);
-	}
+	vbo = 0;
+	mesh.clear();
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
+			meshlock.lock();
+
 			int h = GetHeight(i, j); // map height
 			float x = XMap(i);  // corner coordinate
 			float z = ZMap(j);
@@ -92,7 +93,7 @@ void CTerrine::BuildVoxelMesh()
 				mesh.push_back({ v_h[2], v_h[1], v_h[3] });
 			}
 			if (i < size - 1) {
-				int h_1 = GetHeight(i+1, j);
+				int h_1 = GetHeight(i + 1, j);
 				TERRINE_TRIANGLE_VERTEX v_h[4] = {
 					{ x_1, h,   z   },
 					{ x_1, h,   z_1 },
@@ -102,26 +103,49 @@ void CTerrine::BuildVoxelMesh()
 				mesh.push_back({ v_h[0], v_h[1], v_h[2] });
 				mesh.push_back({ v_h[2], v_h[1], v_h[3] });
 			}
+			meshlock.unlock();
+			std::this_thread::sleep_for(std::chrono::microseconds(0));
 		}
 	}
-	if (vbo) {
+	unsigned int _vbo;
+	glGenBuffers(1, &_vbo);
+	if (glIsBuffer(_vbo)) {
+
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, mesh.size() * 3 * 3 * sizeof(float), &mesh[0], GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		vbo = _vbo;
+		mesh.clear();
 	}
+
 }
 
 #include "perlin.h"
+#include <thread>
+#include <iostream>
+
+
 
 Terrine terrine::factory::Create()
 {
 	auto t = new CTerrine;
 	t->Init(1024);
-	CPerlin perlin;
-	perlin.persistence = 5;
-	perlin.Number_Of_Octaves = 4;
+	CPerlin* perlin = new CPerlin;
+	perlin->persistence = 5;
+	perlin->Number_Of_Octaves = 4;
+	t->mesh.clear();
 
+	/*std::cout << "Building terrine" << std::endl;
 	t->Build([&perlin](int x, int y) {return perlin.Noise2D(x*0.005, y*0.005); });
-	t->BuildVoxelMesh();
+	std::cout << "Generating terrine mesh" << std::endl;
+	t->BuildVoxelMesh();*/
+
+	new std::thread([&](CTerrine* t, CPerlin* perlin) {
+		std::cout << "Building terrine" << std::endl;
+		t->Build([&perlin](int x, int y) {return perlin->Noise2D(x*0.005, y*0.005); });
+		std::cout << "Generating terrine mesh" << std::endl;
+		t->BuildVoxelMesh();
+	}, t, perlin);
 	return Terrine(t);
 }
