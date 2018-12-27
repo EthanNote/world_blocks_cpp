@@ -122,6 +122,8 @@ void CTerrine::BuildVoxelMesh()
 }
 
 #include "perlin.h"
+#include "simplexnoise.h"
+
 #include <thread>
 #include <iostream>
 
@@ -136,16 +138,27 @@ Terrine terrine::factory::Create()
 	perlin->Number_Of_Octaves = 4;
 	t->mesh.clear();
 
+	CSimplexNoise* noise = new CSimplexNoise();
+
+
 	/*std::cout << "Building terrine" << std::endl;
 	t->Build([&perlin](int x, int y) {return perlin.Noise2D(x*0.005, y*0.005); });
 	std::cout << "Generating terrine mesh" << std::endl;
 	t->BuildVoxelMesh();*/
 
-	new std::thread([&](CTerrine* t, CPerlin* perlin) {
+	/*new std::thread([&](CTerrine* t, CPerlin* perlin) {
 		std::cout << "Building terrine" << std::endl;
 		t->Build([&perlin](int x, int y) {return perlin->Noise2D(x*0.005, y*0.005); });
 		std::cout << "Generating terrine mesh" << std::endl;
 		t->BuildVoxelMesh();
-	}, t, perlin);
+	}, t, perlin);*/
+
+	new std::thread([](CTerrine* t, CSimplexNoise* noise) {
+		std::cout << "Building terrine" << std::endl;
+		t->Build([&noise](int x, int y) {return 100*noise->noise(x*0.005, y*0.005); });
+		std::cout << "Generating terrine mesh" << std::endl;
+		t->BuildVoxelMesh();
+	}, t, noise);
+
 	return Terrine(t);
 }
