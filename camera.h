@@ -22,9 +22,9 @@ public:
 };
 
 
-class Camera: public std::enable_shared_from_this<Camera> {
+class CCamera: public std::enable_shared_from_this<CCamera> {
 private:
-	static std::shared_ptr<Camera> current_attached_camera;
+	static std::shared_ptr<CCamera> current_attached_camera;
 protected:
 	glm::mat4 _last_get_projection = glm::mat4(1.0);
 	glm::mat4 _last_get_modelview = glm::mat4(1.0);
@@ -48,15 +48,17 @@ public:
 	std::shared_ptr<Controller> controller=nullptr;
 	virtual std::shared_ptr<Controller> CreateController();
 
-	Camera();
+	CCamera();
 
 
-	static std::shared_ptr<Camera> CreateFPSCamera();
+	static std::shared_ptr<CCamera> CreateFPSCamera();
 	//virtual ~Camera();
 };
 
+typedef std::shared_ptr<CCamera> Camera;
 
-class CameraFPS :public Camera {
+
+class CFpsCamera :public CCamera {
 private:
 public:
 
@@ -68,6 +70,7 @@ public:
 	virtual std::shared_ptr<Controller> CreateController() override;
 };
 
+typedef std::shared_ptr<CFpsCamera> FpsCamera;
 
 
 #endif

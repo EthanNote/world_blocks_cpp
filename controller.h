@@ -4,7 +4,7 @@
 #include<memory>
 #include<vector>
 
-class Camera;
+class CCamera;
 
 class Controller :std::enable_shared_from_this<Controller> {
 public:
@@ -15,7 +15,7 @@ public:
 
 class CameraController : public Controller {
 public:
-	std::shared_ptr<Camera> camera;
+	std::shared_ptr<CCamera> camera;
 };
 
 

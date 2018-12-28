@@ -2,9 +2,9 @@
 #include "camera.h"
 #include "controller.h"
 
-std::shared_ptr<Camera> Camera::current_attached_camera = nullptr;
+std::shared_ptr<CCamera> CCamera::current_attached_camera = nullptr;
 
-glm::mat4 & Camera::GetProjection()
+glm::mat4 & CCamera::GetProjection()
 {
 	this->_last_get_projection =
 		glm::perspective(
@@ -16,19 +16,19 @@ glm::mat4 & Camera::GetProjection()
 	return this->_last_get_projection;
 }
 
-glm::mat4 & Camera::GetModelView()
+glm::mat4 & CCamera::GetModelView()
 {
 	return this->_last_get_modelview;
 }
 
-glm::mat4 & Camera::GetMVP()
+glm::mat4 & CCamera::GetMVP()
 {
 	this->_last_get_mvp = this->GetProjection() * this->GetModelView();
 	return this->_last_get_mvp;
 }
 
 
-void Camera::setupControls()
+void CCamera::setupControls()
 {
 }
 
@@ -44,19 +44,19 @@ void Camera::setupControls()
 //	}
 //}
 
-std::shared_ptr<Controller> Camera::CreateController()
+std::shared_ptr<Controller> CCamera::CreateController()
 {
 	auto controller = std::shared_ptr<Controller>(new Controller());
 	return controller;
 }
 
-Camera::Camera()
+CCamera::CCamera()
 {
 }
 
-std::shared_ptr<Camera> Camera::CreateFPSCamera()
+std::shared_ptr<CCamera> CCamera::CreateFPSCamera()
 {
-	return std::shared_ptr<CameraFPS>(new CameraFPS);
+	return std::shared_ptr<CFpsCamera>(new CFpsCamera);
 }
 
 //Camera::~Camera()
@@ -69,7 +69,7 @@ std::shared_ptr<Camera> Camera::CreateFPSCamera()
 //}
 
 
-glm::mat4 & CameraFPS::GetModelView()
+glm::mat4 & CFpsCamera::GetModelView()
 {
 	float ryall = glm::radians(this->yall);
 	float rpitch = glm::radians(this->pitch);
@@ -83,7 +83,7 @@ glm::mat4 & CameraFPS::GetModelView()
 	return _last_get_modelview;
 }
 
-std::shared_ptr<Controller> CameraFPS::CreateController()
+std::shared_ptr<Controller> CFpsCamera::CreateController()
 {
 	std::shared_ptr<CameraFPSController> controller = std::shared_ptr<CameraFPSController>(new CameraFPSController);
 	controller->camera = shared_from_this();

@@ -6,7 +6,7 @@ extern "C" {
 }
 extern  lua_State *L;
 
-std::shared_ptr<CameraFPS> camfps;
+std::shared_ptr<CFpsCamera> camfps;
 //std::shared_ptr<Camera> cam;
 static int cam_pos(lua_State *L) {
 	if (camfps == nullptr) {
@@ -28,7 +28,7 @@ static int cam_yall_pitch_roll(lua_State *L) {
 	return 3;
 }
 
-void shell::camera::init_fps(std::shared_ptr<CameraFPS> cam)
+void shell::camera::init_fps(std::shared_ptr<CFpsCamera> cam)
 {
 	camfps = cam;
 	static const struct luaL_Reg funcs[] = {

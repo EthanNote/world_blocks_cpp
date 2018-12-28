@@ -13,6 +13,6 @@ namespace shell {
 	}
 
 	namespace camera {
-		void init_fps(std::shared_ptr<CameraFPS> cam);
+		void init_fps(std::shared_ptr<CFpsCamera> cam);
 	}
 }

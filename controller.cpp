@@ -58,7 +58,7 @@ void Controller::FrameUpdate()
 
 void CameraFPSController::FrameUpdate()
 {
-	auto camera = std::dynamic_pointer_cast<CameraFPS, Camera>(this->camera);
+	auto camera = std::dynamic_pointer_cast<CFpsCamera, CCamera>(this->camera);
 	double dx, dy;
 	drag_get_vector(&dx, &dy);
 	camera->yall += dx / camera->sensitivity;

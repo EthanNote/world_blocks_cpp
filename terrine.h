@@ -3,6 +3,7 @@
 #include <functional>
 #include <memory>
 #include <shared_mutex>
+#include "renderable.h"
 
 struct TERRINE_TRIANGLE_VERTEX {
 	float x;
@@ -25,10 +26,11 @@ struct TERRINE_TILE {
 	int grad[2];
 };
 
-class CTiledTerrine {
+class CTiledTerrine :public Renderable {
 	int size = 0;
 public:
-
+	CTiledTerrine();
+	void Draw() override;
 	std::vector<TERRINE_TILE> tiles;
 	void Init(int size);
 	void Build();

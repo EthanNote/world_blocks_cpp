@@ -163,6 +163,27 @@ Terrine terrine::factory::Create()
 	return Terrine(t);
 }
 
+CTiledTerrine::CTiledTerrine()
+{
+	this->attributes.push_back({ 0, 4, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TILE), (void*)0 });
+	this->attributes.push_back({ 1, 2, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TILE), (void*)(4*sizeof(int))});
+}
+
+
+#include"shaderlib.h"
+void CTiledTerrine::Draw()
+{
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	attributes[0].ptr = &this->tiles[0];
+	attributes[1].ptr = &this->tiles[0].grad[0];
+	EnableAttributes();
+	ApplyVertexAttribute();
+	glDrawArrays(GL_POINTS, 0, tiles.size());
+	DisableAttributes();
+
+}
+
 void CTiledTerrine::Init(int size)
 {
 	tiles.resize(size*size);
@@ -178,6 +199,7 @@ void CTiledTerrine::Build()
 	//	tiles[i*size].z = i;
 	//	tiles[i*size].y = 0; //noise(0, i);
 	//}
+	CSimplexNoise* noise = new CSimplexNoise();
 
 	for (int i = 1; i < size; i++) {
 		for (int j = 0; j < size; j++) {
@@ -186,9 +208,9 @@ void CTiledTerrine::Build()
 			p->z = i;
 			p->size = 1;
 
-			p->y = 0; //noise (j, i);
-			p->grad[0] = 0; //noise(j+i, i)
-			p->grad[1] = 0; //noise(j, i+1)
+			p->y =       100 * noise->noise(j*0.005,     i*0.005); //noise (j, i);
+			p->grad[0] = 100 * noise->noise((j+1)*0.005, i*0.005); //noise(j+i, i)
+			p->grad[1] = 100 * noise->noise(j*0.005, (i+1)*0.005); //noise(j, i+1)
 		}
 	}
 }

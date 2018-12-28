@@ -25,7 +25,7 @@ extern float ssao_kernel_128[];
 
 class Test : public Game {
 public:
-	std::shared_ptr<CameraFPS> camera = std::dynamic_pointer_cast<CameraFPS, Camera>(Camera::CreateFPSCamera());
+	std::shared_ptr<CFpsCamera> camera = std::dynamic_pointer_cast<CFpsCamera, CCamera>(CCamera::CreateFPSCamera());
 	BlockPool block_pool = nullptr;
 	RenderTarget rt_deferred_geometry = nullptr;
 	RenderTarget rt_lightmap = nullptr;
