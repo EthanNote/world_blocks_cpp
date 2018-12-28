@@ -149,3 +149,33 @@ Terrine terrine::factory::Create()
 	}, t, perlin);
 	return Terrine(t);
 }
+
+void CTiledTerrine::Init(int size)
+{
+	tiles.resize(size*size);
+	memset(&tiles[0], 0, size*size * sizeof(TERRINE_TILE));
+	this->size = size;
+}
+
+void CTiledTerrine::Build()
+{
+	//for (int i = 0; i < size; i++) {
+	//	tiles[i].x = i;
+	//	tiles[i].y = 0; // noise(i, 0);
+	//	tiles[i*size].z = i;
+	//	tiles[i*size].y = 0; //noise(0, i);
+	//}
+
+	for (int i = 1; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			auto p = &tiles[i*size + j];
+			p->x = j;
+			p->z = i;
+			p->size = 1;
+
+			p->y = 0; //noise (j, i);
+			p->grad[0] = 0; //noise(j+i, i)
+			p->grad[1] = 0; //noise(j, i+1)
+		}
+	}
+}

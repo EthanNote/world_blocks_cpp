@@ -16,6 +16,25 @@ struct TERRINE_TRIANGLE {
 	TERRINE_TRIANGLE_VERTEX v3;
 };
 
+struct TERRINE_TILE {
+	int x;
+	int y;
+	int z;
+	int size;
+
+	int grad[2];
+};
+
+class CTiledTerrine {
+	int size = 0;
+public:
+
+	std::vector<TERRINE_TILE> tiles;
+	void Init(int size);
+	void Build();
+};
+
+
 class CTerrine
 {
 	int size=0;
