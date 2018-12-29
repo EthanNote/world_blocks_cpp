@@ -64,3 +64,86 @@ void CameraFPSController::FrameUpdate()
 	camera->yall += dx / camera->sensitivity;
 	camera->pitch += dy / camera->sensitivity;
 }
+
+//void ControllerAxis::TestKey(int key)
+//{
+//	for (int i = 0; i < 4; i++) {
+//		auto iter = std::find(stroke_keys[i].begin(), stroke_keys[i].end(), key);
+//		if (iter != stroke_keys[i].end()) {
+//			stroke_strength[i] = 1;
+//			break;
+//		}
+//	}
+//}
+
+
+
+void InputAxis::TestKey(int key, int action)
+{
+	for (int i = 0; i < 4; i++) {
+		auto iter = std::find(stroke_keys[i].begin(), stroke_keys[i].end(), key);
+		if (iter != stroke_keys[i].end()) {
+			stroke_strength[i] = action;
+			break;
+		}
+	}
+}
+
+void InputAxis::OnKeyEvent(int key, int scancode, int action, int mods)
+{
+	TestKey(key, action);
+}
+
+InputAxis::InputAxis()
+{
+	stroke_keys[UP].push_back(GLFW_KEY_W);
+	stroke_keys[UP].push_back(GLFW_KEY_UP);
+
+	stroke_keys[DOWN].push_back(GLFW_KEY_S);
+	stroke_keys[DOWN].push_back(GLFW_KEY_DOWN);
+	
+	stroke_keys[LEFT].push_back(GLFW_KEY_A);
+	stroke_keys[LEFT].push_back(GLFW_KEY_LEFT);
+	
+	stroke_keys[RIGHT].push_back(GLFW_KEY_D);
+	stroke_keys[RIGHT].push_back(GLFW_KEY_RIGHT);
+}
+
+float InputAxis::GetX()
+{
+	return stroke_strength[RIGHT] - stroke_strength[LEFT];
+}
+
+float InputAxis::GetY()
+{
+	return stroke_strength[UP] - stroke_strength[DOWN];
+}
+
+#include<list>
+std::list<KeyEventHandler*> handlers;
+
+void keyfunc(GLFWwindow*, int key, int scancode, int action, int mods) {
+	_handler_call(key, scancode, action, mods);
+}
+
+void _handler_call(int key, int scancode, int action, int mods) {
+	for (auto i = handlers.begin(); i != handlers.end(); i++) {
+		(*i)->OnKeyEvent(key, scancode, action, mods);
+	}
+}
+
+void KeyEventHandler::Enable()
+{
+	GLFWkeyfun(keyfunc);
+}
+
+KeyEventHandler::KeyEventHandler()
+{
+	handlers.push_back(this);
+	
+}
+
+KeyEventHandler::~KeyEventHandler()
+{
+	handlers.remove(this);
+}
