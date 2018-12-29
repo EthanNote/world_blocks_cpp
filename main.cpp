@@ -36,6 +36,8 @@ public:
 	RenderOperation block_render_operation = nullptr;
 	RenderOperation terrine_render_operation = nullptr;
 
+	TiledTerrine tiled_terrine = TiledTerrine(new CTiledTerrine);
+
 	BlockPalette palette;
 	BlockTree tree = nullptr;
 	Terrine terrine = nullptr;
@@ -54,14 +56,19 @@ public:
 		shaderlib::terrine_shader->MVP.Set(mvp);
 		shaderlib::terrine_shader->MV.Set(mv);
 
+
 		rt_deferred_geometry->Pass([&]() {
 			shaderlib::block_shader->UseProgram();
 			block_render_operation->Draw();
 
-			if (terrine_render_operation != nullptr) {
+			/*if (terrine_render_operation != nullptr) {
 				shaderlib::terrine_shader->UseProgram();
 				terrine_render_operation->Draw();
-			}
+			}*/
+			shaderlib::tile_shader->MV.Set(mv);
+			shaderlib::tile_shader->MVP.Set(mvp);
+			shaderlib::tile_shader->UseProgram();
+			tiled_terrine->Draw();
 			
 		});
 
@@ -107,7 +114,14 @@ public:
 		auto controller = camera->CreateController();
 		controllers.push_back(controller);
 
-		camera->position = glm::vec3(512, 48, 512);
+		camera->position = glm::vec3(512, 32, 512);
+		//camera->position = glm::vec3(-32, 4, 64);
+
+		tiled_terrine->Init(1024);
+		new std::thread([&] {
+			tiled_terrine->Build();
+		});
+
 		camera->yall = -258;
 		camera->pitch = -20;
 	
@@ -232,6 +246,7 @@ public:
 
 		new std::thread(func);
 
+		
 		auto error = glGetError();
 		return error;
 	}

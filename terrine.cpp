@@ -155,7 +155,7 @@ Terrine terrine::factory::Create()
 
 	new std::thread([](CTerrine* t, CSimplexNoise* noise) {
 		std::cout << "Building terrine" << std::endl;
-		t->Build([&noise](int x, int y) {return 100*noise->noise(x*0.005, y*0.005); });
+		t->Build([&noise](int x, int y) {return 100 * noise->noise(x*0.005, y*0.005); });
 		std::cout << "Generating terrine mesh" << std::endl;
 		t->BuildVoxelMesh();
 	}, t, noise);
@@ -163,26 +163,39 @@ Terrine terrine::factory::Create()
 	return Terrine(t);
 }
 
+void * CTiledTerrine::GetVertexBufferPointer()
+{
+	return &tiles[0];
+}
+
+int CTiledTerrine::GetPrimitiveCount()
+{
+	return tiles.size();
+}
+
 CTiledTerrine::CTiledTerrine()
 {
-	this->attributes.push_back({ 0, 4, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TILE), (void*)0 });
-	this->attributes.push_back({ 1, 2, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TILE), (void*)(4*sizeof(int))});
+	this->attributes.clear();
+	this->attributes.push_back({ 0, 4, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TILE), 0 });
+	this->attributes.push_back({ 1, 2, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TILE), 4 * sizeof(int) });
+	this->PrimitiveSize = sizeof(TERRINE_TILE);
+	this->PrimitiveType = GL_POINTS;
 }
 
 
 #include"shaderlib.h"
-void CTiledTerrine::Draw()
-{
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	attributes[0].ptr = &this->tiles[0];
-	attributes[1].ptr = &this->tiles[0].grad[0];
-	EnableAttributes();
-	ApplyVertexAttribute();
-	glDrawArrays(GL_POINTS, 0, tiles.size());
-	DisableAttributes();
-
-}
+//void CTiledTerrine::Draw()
+//{
+//	glBindVertexArray(0);
+//	glBindBuffer(GL_ARRAY_BUFFER, 0);
+//	attributes[0].ptr = &this->tiles[0];
+//	attributes[1].ptr = &this->tiles[0].grad[0];
+//	EnableAttributes();
+//	ApplyVertexAttribute();
+//	glDrawArrays(GL_POINTS, 0, tiles.size());
+//	DisableAttributes();
+//
+//}
 
 void CTiledTerrine::Init(int size)
 {
@@ -201,16 +214,33 @@ void CTiledTerrine::Build()
 	//}
 	CSimplexNoise* noise = new CSimplexNoise();
 
-	for (int i = 1; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
 			auto p = &tiles[i*size + j];
 			p->x = j;
 			p->z = i;
 			p->size = 1;
 
-			p->y =       100 * noise->noise(j*0.005,     i*0.005); //noise (j, i);
-			p->grad[0] = 100 * noise->noise((j+1)*0.005, i*0.005); //noise(j+i, i)
-			p->grad[1] = 100 * noise->noise(j*0.005, (i+1)*0.005); //noise(j, i+1)
+			p->y = 32 * noise->noise(j*0.005, i*0.005); //noise (j, i);
 		}
 	}
+
+	for (int i = 0; i < size - 1; i++) {
+		for (int j = 0; j < size - 1; j++) {
+			auto p = &tiles[i*size + j];
+			p->grad[0] = tiles[i*size + j + 1].y - p->y;
+			p->grad[1] = tiles[(i + 1)*size + j].y - p->y;
+		}
+	}
+
+	for (int i = 0; i < size - 1; i++) {
+		int j = size - 1;
+		auto p = &tiles[i*size + j];
+		p->grad[1] = (p+size)->y - p->y;
+
+		auto q = &tiles[j*size + i];
+		q->grad[0] = (q + 1)->y - q->y;
+	}
+
+
 }

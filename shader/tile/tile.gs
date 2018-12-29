@@ -1,3 +1,4 @@
+#version 400
 layout(points) in;
 layout(triangle_strip, max_vertices = 12) out;
 
@@ -36,9 +37,13 @@ void face_vertex(int a, int b, int c, int d){
 
 void main(){
     vec4 pos = vec4(tile_space[0].xyz, 1.0);
-    float size = tile_space.z;
-    float g_x = tile_grad.x;
-    float g_z = tile_grad.y;
+    float size = tile_space[0].w;
+    if(size<=0){
+        EndPrimitive();
+        return;
+    }
+    float g_x = tile_grad[0].x;
+    float g_z = tile_grad[0].y;
   
     v[0] = pos;
     v[1] = pos + vec4(0.0,  0.0, size, 0.0);
@@ -51,17 +56,19 @@ void main(){
 
     
     face_vertex(0,1,2,3);
-    if(g_z>0){
-        face_vertex(1,3,4,5);
-    }
-    else if(g_z<0){
-        face_vertex(1,4,3,5);
-    }
+    face_vertex(1,4,3,5);
+    face_vertex(2,3,7,6);
+    // if(g_z>0){
+    //     face_vertex(1,3,4,5);
+    // }
+    // else if(g_z<0){
+    //     face_vertex(1,4,3,5);
+    // }
 
-    if(g_x>0){
-        face_vertex(2,7,3,6);
-    }
-    else if(g_x<0){
-        face_vertex(2,3,7,6);
-    }
+    // if(g_x>0){
+    //     face_vertex(2,7,3,6);
+    // }
+    // else if(g_x<0){
+    //     face_vertex(2,3,7,6);
+    // }
 }

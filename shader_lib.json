@@ -23,5 +23,10 @@
     "name": "TerrineShader",
     "identifier": "terrine_shader",
     "source": ["./shader/terrine/terrine.vs", "./shader/terrine/terrine.fs", null]
+  },
+  {
+    "name": "TileShader",
+    "identifier": "tile_shader",
+    "source": ["./shader/tile/tile.vs", "./shader/tile/tile.fs", "./shader/tile/tile.gs"]
   }
 ]

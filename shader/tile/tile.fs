@@ -1,3 +1,4 @@
+#version 400
 in float height;
 
 in vec4 view_pos;

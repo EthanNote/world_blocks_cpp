@@ -28,13 +28,17 @@ struct TERRINE_TILE {
 
 class CTiledTerrine :public Renderable {
 	int size = 0;
+	void* GetVertexBufferPointer() override;
+	int GetPrimitiveCount() override;
 public:
+
 	CTiledTerrine();
-	void Draw() override;
 	std::vector<TERRINE_TILE> tiles;
 	void Init(int size);
 	void Build();
 };
+
+typedef std::shared_ptr<CTiledTerrine> TiledTerrine;
 
 
 class CTerrine

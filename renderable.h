@@ -9,7 +9,7 @@ struct VERTEX_ATTRIBUTE {
 	GLenum type;
 	GLboolean normalized;
 	GLsizei stride;
-	const void *ptr;
+	unsigned int buffer_byte_offset;
 };
 
 //namespace vertex_attribute {
@@ -21,9 +21,12 @@ protected:
 	std::vector<VERTEX_ATTRIBUTE> attributes;
 	GLuint VAO=0;
 	GLuint VBO=0;
+	GLenum PrimitiveType = GL_POINTS;
+	GLuint PrimitiveSize = 0;
+	virtual void* GetVertexBufferPointer();
+	virtual int GetPrimitiveCount();
 public:
-	virtual void Draw()=0;
-	void ApplyVertexAttribute();
+	void Draw();
 	void EnableAttributes();
 	void DisableAttributes();
 };
