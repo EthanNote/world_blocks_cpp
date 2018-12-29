@@ -40,7 +40,7 @@ public:
 
 	BlockPalette palette;
 	BlockTree tree = nullptr;
-	Terrine terrine = nullptr;
+	//Terrine terrine = nullptr;
 	virtual bool GameLoop() {
 		if (!Game::GameLoop()) {
 			return false;
@@ -120,6 +120,9 @@ public:
 		tiled_terrine->Init(1024);
 		new std::thread([&] {
 			tiled_terrine->Build();
+			TILE_AREA area = { 500, 500, 32, 64 };
+			//tiled_terrine->CutoutArea(area);
+			tiled_terrine->FlattenArea(area, -100);
 		});
 
 		camera->yall = -258;
@@ -203,8 +206,8 @@ public:
 
 		shell::camera::init_fps(camera);
 
-		terrine = terrine::factory::Create();
-		terrine_render_operation = CTerrineRenderOperation::Create(terrine);
+		//terrine = terrine::factory::Create();
+		//terrine_render_operation = CTerrineRenderOperation::Create(terrine);
 
 		//new std::thread([&] {terrine_render_operation = CTerrineRenderOperation::Create(terrine); });
 

@@ -28,9 +28,9 @@ public:
 typedef std::shared_ptr<CBlockRenderOperation> BlockRenderOperation;
 
 
-class CTerrineRenderOperation : public CRenderOperation {
-public:
-	Terrine terrine;
-	void Draw() override;
-	static RenderOperation Create(Terrine terrine);
-};
+//class CTerrineRenderOperation : public CRenderOperation {
+//public:
+//	Terrine terrine;
+//	void Draw() override;
+//	static RenderOperation Create(Terrine terrine);
+//};
