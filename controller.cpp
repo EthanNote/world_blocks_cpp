@@ -47,35 +47,40 @@ void drag_get_vector(double *dx, double *dy) {
 	*dy = drag_control.dy;
 }
 
-std::shared_ptr<Controller> Controller::getptr()
-{
-	return shared_from_this();
-}
+//std::shared_ptr<Controller> Controller::getptr()
+//{
+//	return shared_from_this();
+//}
 
 void Controller::FrameUpdate()
 {
 }
 
-void CameraFPSController::FrameUpdate()
+void CFpsCameraController::FrameUpdate()
 {
-	auto camera = std::dynamic_pointer_cast<CFpsCamera, CCamera>(this->camera);
+	//auto camera = std::dynamic_pointer_cast<CFpsCamera, CCamera>(this->camera);
 	double dx, dy;
 	drag_get_vector(&dx, &dy);
-	camera->yall += dx / camera->sensitivity;
-	camera->pitch += dy / camera->sensitivity;
+	camera->yall -= dx / camera->sensitivity;
+	camera->pitch -= dy / camera->sensitivity;
+
+	float ryall = glm::radians(camera->yall);
+	float rpitch = glm::radians(camera->pitch);
+	glm::vec3 forward(
+		-sin(ryall)*cos(rpitch),
+		sin(rpitch),
+		-cos(ryall)*cos(rpitch));
+
+	glm::vec3 right(
+		cos(ryall),
+		0,
+		-sin(ryall));
+
+	camera->position += forward * axis.GetY() + right * axis.GetX();
+	
+
+
 }
-
-//void ControllerAxis::TestKey(int key)
-//{
-//	for (int i = 0; i < 4; i++) {
-//		auto iter = std::find(stroke_keys[i].begin(), stroke_keys[i].end(), key);
-//		if (iter != stroke_keys[i].end()) {
-//			stroke_strength[i] = 1;
-//			break;
-//		}
-//	}
-//}
-
 
 
 void InputAxis::TestKey(int key, int action)
@@ -111,20 +116,23 @@ InputAxis::InputAxis()
 
 float InputAxis::GetX()
 {
-	return stroke_strength[RIGHT] - stroke_strength[LEFT];
+	auto v= stroke_strength[RIGHT] - stroke_strength[LEFT];
+	if (v > 1) { v = 1; }
+	if (v < -1) { v = -1; }
+	return v;
 }
 
 float InputAxis::GetY()
 {
-	return stroke_strength[UP] - stroke_strength[DOWN];
+	auto v = stroke_strength[UP] - stroke_strength[DOWN];
+	if (v > 1) { v = 1; }
+	if (v < -1) { v = -1; }
+	return v;
 }
 
 #include<list>
 std::list<KeyEventHandler*> handlers;
 
-void keyfunc(GLFWwindow*, int key, int scancode, int action, int mods) {
-	_handler_call(key, scancode, action, mods);
-}
 
 void _handler_call(int key, int scancode, int action, int mods) {
 	for (auto i = handlers.begin(); i != handlers.end(); i++) {
@@ -132,10 +140,16 @@ void _handler_call(int key, int scancode, int action, int mods) {
 	}
 }
 
-void KeyEventHandler::Enable()
-{
-	GLFWkeyfun(keyfunc);
+void _key_callback(GLFWwindow*, int key, int scancode, int action, int mods) {
+	_handler_call(key, scancode, action, mods);
 }
+
+//void KeyEventHandler::Enable()
+//{
+//	/*GLFWkeyfun(keyfunc);
+//	std::cout << "???"<<std::endl;*/
+//	//glfwSetKeyCallback()
+//}
 
 KeyEventHandler::KeyEventHandler()
 {

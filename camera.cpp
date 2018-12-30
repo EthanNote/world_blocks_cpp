@@ -85,10 +85,10 @@ glm::mat4 & CFpsCamera::GetModelView()
 
 std::shared_ptr<Controller> CFpsCamera::CreateController()
 {
-	std::shared_ptr<CameraFPSController> controller = std::shared_ptr<CameraFPSController>(new CameraFPSController);
-	controller->camera = shared_from_this();
+	auto controller = std::shared_ptr<CFpsCameraController>(new CFpsCameraController);
+	controller->camera = this;
 
-	return std::static_pointer_cast<Controller, CameraFPSController>(controller);
+	return std::static_pointer_cast<Controller>(controller);
 }
 
 //glm::mat4 & CameraFPS::GetMVP()

@@ -6,6 +6,7 @@ std::shared_ptr<Game> current=nullptr;
 
 extern void drag_init(GLFWwindow* window);
 extern void drag_update(GLFWwindow* window);
+extern void _key_callback(GLFWwindow*, int key, int scancode, int action, int mods);
 //std::shared_ptr<Game> Game::GetCurrent()
 //{
 //	//return current;
@@ -34,6 +35,7 @@ int Game::Init()
 	}
 	glfwMakeContextCurrent(window);
 
+	glfwSetKeyCallback(window, _key_callback);
 	// start GLEW extension handler
 	glewExperimental = GL_TRUE;
 	glewInit();

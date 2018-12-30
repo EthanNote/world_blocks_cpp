@@ -22,7 +22,7 @@ public:
 };
 
 
-class CCamera: public std::enable_shared_from_this<CCamera> {
+class CCamera{
 private:
 	static std::shared_ptr<CCamera> current_attached_camera;
 protected:

@@ -11,7 +11,6 @@ class KeyEventHandler {
 protected:
 	virtual void OnKeyEvent(int key, int scancode, int action, int mods) = 0;
 public:
-	static void Enable();
 	KeyEventHandler();
 	~KeyEventHandler();
 };
@@ -28,20 +27,24 @@ public:
 	float GetY();
 };
 
-class Controller :std::enable_shared_from_this<Controller> {
+class Controller {
 public:
-	std::shared_ptr<Controller> getptr();
+	InputAxis axis;
+
+	//std::shared_ptr<Controller> getptr();
 
 	virtual void FrameUpdate();
 };
 
-class CameraController : public Controller {
-public:
-	std::shared_ptr<CCamera> camera;
-};
+//class CameraController : public Controller {
+//public:
+//	std::shared_ptr<CCamera> camera;
+//};
 
 
-class CameraFPSController : public CameraController {
+class CFpsCameraController : public Controller {
+	friend class CFpsCamera;
+	CFpsCamera* camera;
 	virtual void FrameUpdate() override;
 };
 
