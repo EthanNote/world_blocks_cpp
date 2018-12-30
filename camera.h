@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <memory>
 
-class Controller;
+class FrameEventHandler;
 
 
 
@@ -42,18 +42,16 @@ public:
 	virtual glm::mat4 & GetProjection();
 	virtual glm::mat4 & GetModelView();
 	virtual glm::mat4 & GetMVP();
-	//void attach();
-	//void detach();
-	//friend static void detachAll();
-	std::shared_ptr<Controller> controller=nullptr;
-	virtual std::shared_ptr<Controller> CreateController();
+	std::shared_ptr<FrameEventHandler> controller=nullptr;
+	virtual std::shared_ptr<FrameEventHandler> CreateController();
 
 	CCamera();
 
 
-	static std::shared_ptr<CCamera> CreateFPSCamera();
-	//virtual ~Camera();
+	//static std::shared_ptr<CCamera> CreateFPSCamera();
 };
+
+
 
 typedef std::shared_ptr<CCamera> Camera;
 
@@ -67,10 +65,12 @@ public:
 	float yall = 0;
 	float pitch = 0;
 	virtual glm::mat4 & GetModelView() override;
-	virtual std::shared_ptr<Controller> CreateController() override;
+	virtual std::shared_ptr<FrameEventHandler> CreateController() override;
 };
 
 typedef std::shared_ptr<CFpsCamera> FpsCamera;
 
-
+namespace camera {
+	FpsCamera CreateFpsCamera();
+}
 #endif

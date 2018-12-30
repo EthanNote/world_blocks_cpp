@@ -27,12 +27,8 @@ public:
 	float GetY();
 };
 
-class Controller {
+class FrameEventHandler {
 public:
-	InputAxis axis;
-
-	//std::shared_ptr<Controller> getptr();
-
 	virtual void FrameUpdate();
 };
 
@@ -42,9 +38,10 @@ public:
 //};
 
 
-class CFpsCameraController : public Controller {
+class CFpsCameraController : public FrameEventHandler {
 	friend class CFpsCamera;
 	CFpsCamera* camera;
+	InputAxis axis;
 	virtual void FrameUpdate() override;
 };
 

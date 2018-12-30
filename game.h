@@ -13,7 +13,7 @@ class Game
 private:
 
 protected:
-	std::list<std::shared_ptr<Controller>> controllers;
+	std::list<std::shared_ptr<FrameEventHandler>> controllers;
 
 	GLFWwindow* window;
 	virtual int Init();

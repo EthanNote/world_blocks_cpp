@@ -32,41 +32,17 @@ void CCamera::setupControls()
 {
 }
 
-//void Camera::attach()
-//{
-//	current_attached_camera = std::shared_ptr<Camera>(this);
-//}
-//
-//void Camera::detach()
-//{
-//	if (current_attached_camera == std::shared_ptr<Camera>(this)) {
-//		current_attached_camera = nullptr;
-//	}
-//}
 
-std::shared_ptr<Controller> CCamera::CreateController()
+
+std::shared_ptr<FrameEventHandler> CCamera::CreateController()
 {
-	auto controller = std::shared_ptr<Controller>(new Controller());
+	auto controller = std::shared_ptr<FrameEventHandler>(new FrameEventHandler());
 	return controller;
 }
 
 CCamera::CCamera()
 {
 }
-
-std::shared_ptr<CCamera> CCamera::CreateFPSCamera()
-{
-	return std::shared_ptr<CFpsCamera>(new CFpsCamera);
-}
-
-//Camera::~Camera()
-//{
-//	//this->detach();
-//}
-
-//void detachAll() {
-//	Camera::current_attached_camera = nullptr;
-//}
 
 
 glm::mat4 & CFpsCamera::GetModelView()
@@ -83,32 +59,13 @@ glm::mat4 & CFpsCamera::GetModelView()
 	return _last_get_modelview;
 }
 
-std::shared_ptr<Controller> CFpsCamera::CreateController()
+std::shared_ptr<FrameEventHandler> CFpsCamera::CreateController()
 {
 	auto controller = std::shared_ptr<CFpsCameraController>(new CFpsCameraController);
 	controller->camera = this;
 
-	return std::static_pointer_cast<Controller>(controller);
+	return std::static_pointer_cast<FrameEventHandler>(controller);
 }
-
-//glm::mat4 & CameraFPS::GetMVP()
-//{
-//	/*float ryall = glm::radians(this->yall);
-//	float rpitch = glm::radians(this->pitch);
-//	glm::vec3 looktarget(
-//		-sin(ryall)*cos(rpitch) + this->position.x,
-//					sin(rpitch) + this->position.y,
-//		-cos(ryall)*cos(rpitch) + this->position.z);
-//	auto mv = glm::lookAt(this->position, looktarget, glm::vec3(0, 1, 0));
-//	this->_last_get_modelview = mv;*/
-//
-//
-//	/*auto p = glm::perspective(glm::radians(60.0f), 1.33f, 0.1f, 10.0f);
-//	this->_last_get_projection = p;*/
-//
-//	this->_last_get_mvp = this->GetProjection() * this->GetModelView();
-//	return this->_last_get_mvp;
-//}
 
 
 
@@ -118,4 +75,9 @@ PerspectiveInfo::PerspectiveInfo()
 	this->aspect = 1.33;
 	this->zFar = 1000;
 	this->zNear = 0.1;
+}
+
+FpsCamera camera::CreateFpsCamera()
+{
+	return FpsCamera(new CFpsCamera);
 }

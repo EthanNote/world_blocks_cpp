@@ -52,13 +52,12 @@ void drag_get_vector(double *dx, double *dy) {
 //	return shared_from_this();
 //}
 
-void Controller::FrameUpdate()
+void FrameEventHandler::FrameUpdate()
 {
 }
 
 void CFpsCameraController::FrameUpdate()
 {
-	//auto camera = std::dynamic_pointer_cast<CFpsCamera, CCamera>(this->camera);
 	double dx, dy;
 	drag_get_vector(&dx, &dy);
 	camera->yall -= dx / camera->sensitivity;
@@ -77,8 +76,6 @@ void CFpsCameraController::FrameUpdate()
 		-sin(ryall));
 
 	camera->position += forward * axis.GetY() + right * axis.GetX();
-	
-
 
 }
 
