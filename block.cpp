@@ -112,3 +112,17 @@ int Block::GetChildIndex(Block * another)
 	}
 	return i;
 }
+
+//void * VoxelModel::GetVertexBufferPointer()
+//{
+//	return nullptr;
+//}
+//
+//int VoxelModel::GetPrimitiveCount()
+//{
+//	return 0;
+//}
+//
+//VoxelModel::VoxelModel()
+//{
+//}
