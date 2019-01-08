@@ -9,42 +9,42 @@
 
 
 
-void * CTiledTerrine::GetVertexBufferPointer()
+void * CVoxelTerrine::GetVertexBufferPointer()
 {
 	return &tiles[0];
 }
 
-int CTiledTerrine::GetPrimitiveCount()
+int CVoxelTerrine::GetPrimitiveCount()
 {
 	return tiles.size();
 }
 
-CTiledTerrine::CTiledTerrine()
+CVoxelTerrine::CVoxelTerrine()
 {
 	this->attributes.clear();
-	this->attributes.push_back({ 0, 4, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TILE), 0 });
-	this->attributes.push_back({ 1, 2, GL_FLOAT, GL_FALSE, sizeof(TERRINE_TILE), 4 * sizeof(int) });
-	this->PrimitiveSize = sizeof(TERRINE_TILE);
+	this->attributes.push_back({ 0, 4, GL_FLOAT, GL_FALSE, sizeof(VOXEL_TERRINE_TILE), 0 });
+	this->attributes.push_back({ 1, 2, GL_FLOAT, GL_FALSE, sizeof(VOXEL_TERRINE_TILE), 4 * sizeof(int) });
+	this->PrimitiveSize = sizeof(VOXEL_TERRINE_TILE);
 	this->PrimitiveType = GL_POINTS;
 }
 
 
 
-void CTiledTerrine::Init(int size)
+void CVoxelTerrine::Init(int size)
 {
 	tiles.resize(size*size);
-	memset(&tiles[0], 0, size*size * sizeof(TERRINE_TILE));
+	memset(&tiles[0], 0, size*size * sizeof(VOXEL_TERRINE_TILE));
 	this->size = size;
 }
 
-void CTiledTerrine::Build()
+void CVoxelTerrine::Build()
 {
-	TILE_AREA area = { 0,0,size, size };
+	VOXEL_TILE_AREA area = { 0,0,size, size };
 	BuildArea(area);
 
 }
 
-void CTiledTerrine::BuildArea(TILE_AREA & area)
+void CVoxelTerrine::BuildArea(VOXEL_TILE_AREA & area)
 {
 	for (int i = area.i; i < size && i - area.i < area.span_i; i++) {
 		for (int j = area.j; j < size && j - area.j < area.span_j; j++) {
@@ -73,7 +73,7 @@ void CTiledTerrine::BuildArea(TILE_AREA & area)
 
 }
 
-void CTiledTerrine::CutoutArea(TILE_AREA & area)
+void CVoxelTerrine::CutoutArea(VOXEL_TILE_AREA & area)
 {
 	for (int i = area.i; i < size && i - area.i < area.span_i; i++) {
 		for (int j = area.j; j < size && j - area.j < area.span_j; j++) {
@@ -87,7 +87,7 @@ void CTiledTerrine::CutoutArea(TILE_AREA & area)
 	}
 }
 
-void CTiledTerrine::FlattenArea(TILE_AREA & area, int y)
+void CVoxelTerrine::FlattenArea(VOXEL_TILE_AREA & area, int y)
 {
 	for (int i = area.i; i < size && i - area.i < area.span_i; i++) {
 		for (int j = area.j; j < size && j - area.j < area.span_j; j++) {

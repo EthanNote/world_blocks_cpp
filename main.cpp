@@ -37,7 +37,7 @@ public:
 	RenderOperation block_render_operation = nullptr;
 	RenderOperation terrine_render_operation = nullptr;
 
-	TiledTerrine tiled_terrine = TiledTerrine(new CTiledTerrine);
+	TiledTerrine tiled_terrine = TiledTerrine(new CVoxelTerrine);
 
 	BlockPalette palette;
 	BlockTree tree = nullptr;
@@ -121,7 +121,7 @@ public:
 		tiled_terrine->Init(1024);
 		new std::thread([&] {
 			tiled_terrine->Build();
-			TILE_AREA area = { 500, 500, 32, 64 };
+			VOXEL_TILE_AREA area = { 500, 500, 32, 64 };
 			//tiled_terrine->CutoutArea(area);
 			tiled_terrine->FlattenArea(area, -100);
 		});
